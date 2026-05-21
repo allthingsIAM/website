@@ -1,0 +1,865 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Microsoft Entra ID Mastery — All Things Identity</title>
+<meta name="description" content="An 8-module deep dive into Microsoft Entra ID — governance, lifecycle workflows, conditional access, and enterprise architecture. Taught by a 14-year IAM practitioner."/>
+<meta name="author" content="Andrew Chanthaphone"/>
+<meta name="robots" content="index, follow"/>
+<link rel="canonical" href="https://allthingsidentity.com/entra-id-mastery"/>
+
+<meta property="og:type" content="website"/>
+<meta property="og:url" content="https://allthingsidentity.com/entra-id-mastery"/>
+<meta property="og:title" content="Microsoft Entra ID Mastery — All Things Identity"/>
+<meta property="og:description" content="An 8-module deep dive into Microsoft Entra ID. Governance, lifecycle, conditional access, and enterprise architecture — from a practitioner who's built it in federal and commercial environments."/>
+<meta property="og:image" content="https://allthingsidentity.com/Pro_pic.jpeg"/>
+
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:title" content="Microsoft Entra ID Mastery — All Things Identity"/>
+<meta name="twitter:description" content="8 modules. 50+ videos. 20 labs. Entra ID governance built by a practitioner."/>
+<meta name="twitter:image" content="https://allthingsidentity.com/Pro_pic.jpeg"/>
+
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet"/>
+
+<style>
+  :root {
+    --orange: #F39C12;
+    --orange-light: #F8B84E;
+    --orange-dim: rgba(243,156,18,0.12);
+    --teal: #2C5F6F;
+    --teal-light: #3A7A8F;
+    --teal-dim: rgba(44,95,111,0.12);
+    --dark: #0E1217;
+    --dark2: #161B22;
+    --dark3: #1E252F;
+    --mid: #2A3340;
+    --text: #E8EDF2;
+    --text-muted: #8A9BAD;
+    --text-dim: #556170;
+    --border: rgba(255,255,255,0.07);
+    --font-head: 'Syne', sans-serif;
+    --font-body: 'DM Sans', sans-serif;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--dark);
+    color: var(--text);
+    font-family: var(--font-body);
+    font-size: 16px;
+    line-height: 1.7;
+    overflow-x: hidden;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 5%;
+    height: 68px;
+    background: rgba(14,18,23,0.9);
+    backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--border);
+  }
+  .nav-logo {
+    display: flex; align-items: center; gap: 10px;
+    text-decoration: none;
+    font-family: var(--font-head);
+    font-weight: 800;
+    font-size: 1rem;
+    color: var(--text);
+    letter-spacing: -0.02em;
+  }
+  .nav-logo img { height: 36px; width: auto; }
+  .nav-back {
+    display: flex; align-items: center; gap: 6px;
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    font-weight: 500;
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  .nav-back:hover { color: var(--orange); }
+  .nav-back svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 2; }
+  .nav-cta {
+    background: var(--orange);
+    color: #000;
+    font-family: var(--font-body);
+    font-weight: 600;
+    font-size: 0.85rem;
+    padding: 8px 18px;
+    border-radius: 6px;
+    text-decoration: none;
+    transition: background 0.2s, transform 0.15s;
+  }
+  .nav-cta:hover { background: var(--orange-light); transform: translateY(-1px); }
+
+  /* ── HERO ── */
+  #hero {
+    min-height: 100vh;
+    display: flex; align-items: center;
+    padding: 120px 5% 80px;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero-bg {
+    position: absolute; inset: 0; pointer-events: none;
+    background:
+      radial-gradient(ellipse 70% 60% at 80% 50%, rgba(44,95,111,0.2) 0%, transparent 70%),
+      radial-gradient(ellipse 40% 50% at 10% 80%, rgba(243,156,18,0.07) 0%, transparent 60%);
+  }
+  .hero-grid {
+    position: absolute; inset: 0; pointer-events: none; opacity: 0.025;
+    background-image: linear-gradient(var(--text) 1px, transparent 1px),
+      linear-gradient(90deg, var(--text) 1px, transparent 1px);
+    background-size: 40px 40px;
+  }
+  .hero-inner {
+    position: relative; z-index: 2;
+    max-width: 820px;
+  }
+  .hero-eyebrow {
+    display: flex; align-items: center; gap: 12px;
+    margin-bottom: 1.75rem;
+    animation: fadeUp 0.5s ease both;
+  }
+  .badge-course {
+    display: inline-flex; align-items: center; gap: 7px;
+    background: var(--orange-dim);
+    border: 1px solid rgba(243,156,18,0.25);
+    color: var(--orange-light);
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 5px 13px;
+    border-radius: 100px;
+  }
+  .badge-course::before {
+    content: '';
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--orange);
+    animation: pulse 2s ease-in-out infinite;
+  }
+  .badge-q3 {
+    display: inline-flex; align-items: center;
+    background: var(--teal-dim);
+    border: 1px solid rgba(44,95,111,0.35);
+    color: var(--teal-light);
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 5px 13px;
+    border-radius: 100px;
+  }
+  @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.5;transform:scale(0.8)} }
+  @keyframes fadeUp {
+    from { opacity:0; transform:translateY(20px); }
+    to { opacity:1; transform:translateY(0); }
+  }
+
+  h1 {
+    font-family: var(--font-head);
+    font-size: clamp(2.6rem, 5.5vw, 4.6rem);
+    font-weight: 800;
+    line-height: 1.05;
+    letter-spacing: -0.03em;
+    color: var(--text);
+    margin-bottom: 1.5rem;
+    animation: fadeUp 0.5s 0.1s ease both;
+  }
+  h1 em { font-style: normal; color: var(--orange); }
+
+  .hero-sub {
+    font-size: 1.1rem;
+    color: var(--text-muted);
+    font-weight: 300;
+    max-width: 600px;
+    line-height: 1.75;
+    margin-bottom: 2.5rem;
+    animation: fadeUp 0.5s 0.2s ease both;
+  }
+
+  .hero-form-wrap {
+    animation: fadeUp 0.5s 0.3s ease both;
+    margin-bottom: 3rem;
+  }
+  .hero-form {
+    display: flex; gap: 0.75rem; flex-wrap: wrap;
+    max-width: 480px;
+  }
+  .hero-form input[type="email"] {
+    flex: 1; min-width: 220px;
+    padding: 14px 18px;
+    background: var(--dark3);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 8px;
+    color: var(--text);
+    font-family: var(--font-body);
+    font-size: 0.95rem;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .hero-form input[type="email"]:focus { border-color: rgba(243,156,18,0.45); }
+  .hero-form input[type="email"]::placeholder { color: var(--text-dim); }
+  .hero-form button {
+    padding: 14px 26px;
+    background: var(--orange);
+    color: #000;
+    font-family: var(--font-body);
+    font-weight: 600;
+    font-size: 0.95rem;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+    box-shadow: 0 4px 20px rgba(243,156,18,0.3);
+    white-space: nowrap;
+  }
+  .hero-form button:hover { background: var(--orange-light); transform: translateY(-2px); box-shadow: 0 8px 28px rgba(243,156,18,0.4); }
+  .form-note {
+    margin-top: 0.75rem;
+    font-size: 0.78rem;
+    color: var(--text-dim);
+  }
+
+  .hero-stats {
+    display: flex; gap: 3rem; flex-wrap: wrap;
+    animation: fadeUp 0.5s 0.4s ease both;
+  }
+  .stat-num {
+    font-family: var(--font-head);
+    font-size: 1.75rem;
+    font-weight: 800;
+    color: var(--orange);
+    line-height: 1;
+  }
+  .stat-label {
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    font-weight: 400;
+    margin-top: 4px;
+    letter-spacing: 0.03em;
+  }
+
+  /* ── SHARED ── */
+  section { padding: 100px 5%; }
+  .section-label {
+    display: inline-block;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--orange);
+    margin-bottom: 1rem;
+  }
+  .section-title {
+    font-family: var(--font-head);
+    font-size: clamp(1.8rem, 3.5vw, 2.75rem);
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    line-height: 1.1;
+    color: var(--text);
+    margin-bottom: 1rem;
+  }
+  .section-sub {
+    color: var(--text-muted);
+    font-size: 1rem;
+    font-weight: 300;
+    max-width: 540px;
+    line-height: 1.75;
+    margin-bottom: 3.5rem;
+  }
+  .section-divider {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--border), transparent);
+    margin: 0 5%;
+  }
+  .btn-primary {
+    display: inline-block;
+    background: var(--orange);
+    color: #000;
+    font-family: var(--font-body);
+    font-weight: 600;
+    font-size: 0.95rem;
+    padding: 14px 28px;
+    border-radius: 8px;
+    text-decoration: none;
+    transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+    box-shadow: 0 4px 20px rgba(243,156,18,0.3);
+  }
+  .btn-primary:hover { background: var(--orange-light); transform: translateY(-2px); box-shadow: 0 8px 28px rgba(243,156,18,0.4); }
+
+  /* ── WHO IT'S FOR ── */
+  #who { background: var(--dark2); }
+  .who-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.25rem;
+    max-width: 900px;
+  }
+  .who-card {
+    background: var(--dark3);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 1.75rem;
+    transition: border-color 0.2s, transform 0.2s;
+  }
+  .who-card:hover { border-color: rgba(243,156,18,0.2); transform: translateY(-3px); }
+  .who-icon { font-size: 1.75rem; margin-bottom: 1rem; }
+  .who-title {
+    font-family: var(--font-head);
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 0.5rem;
+    letter-spacing: -0.01em;
+  }
+  .who-desc {
+    font-size: 0.875rem;
+    color: var(--text-muted);
+    font-weight: 300;
+    line-height: 1.65;
+  }
+
+  /* ── PROBLEM ── */
+  #problem { background: var(--dark); }
+  .problem-inner {
+    max-width: 760px;
+  }
+  .problem-quote {
+    background: var(--dark2);
+    border-left: 3px solid var(--orange);
+    border-radius: 0 12px 12px 0;
+    padding: 2rem 2.25rem;
+    margin-bottom: 3rem;
+  }
+  .problem-quote p {
+    color: var(--text-muted);
+    font-size: 1.05rem;
+    font-weight: 300;
+    line-height: 1.85;
+  }
+  .problem-quote p + p { margin-top: 1rem; }
+  .problem-fix {
+    display: flex; align-items: flex-start; gap: 1rem;
+    margin-bottom: 1.5rem;
+  }
+  .problem-fix-icon {
+    font-size: 1.2rem;
+    margin-top: 2px;
+    flex-shrink: 0;
+  }
+  .problem-fix p {
+    font-size: 0.95rem;
+    color: var(--text-muted);
+    font-weight: 300;
+    line-height: 1.75;
+  }
+  .problem-fix strong { color: var(--text); font-weight: 500; }
+
+  /* ── MODULES ── */
+  #modules { background: var(--dark2); }
+  .modules-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 1rem;
+    max-width: 1100px;
+  }
+  .module-card {
+    background: var(--dark3);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1.5rem;
+    transition: border-color 0.2s, transform 0.2s;
+  }
+  .module-card:hover { border-color: rgba(243,156,18,0.25); transform: translateY(-3px); }
+  .module-num {
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--orange);
+    margin-bottom: 0.5rem;
+  }
+  .module-title {
+    font-family: var(--font-head);
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 0.4rem;
+    letter-spacing: -0.01em;
+    line-height: 1.3;
+  }
+  .module-desc {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    font-weight: 300;
+    line-height: 1.65;
+  }
+
+  /* ── TIERS ── */
+  #tiers { background: var(--dark); }
+  .tiers-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.25rem;
+    max-width: 1000px;
+    margin-bottom: 4rem;
+  }
+  .tier-card {
+    background: var(--dark3);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 2.25rem;
+    position: relative;
+    transition: border-color 0.2s, transform 0.2s;
+  }
+  .tier-card:hover { transform: translateY(-4px); }
+  .tier-card.featured {
+    border-color: rgba(243,156,18,0.4);
+    background: linear-gradient(160deg, rgba(243,156,18,0.06) 0%, var(--dark3) 55%);
+  }
+  .tier-badge {
+    position: absolute;
+    top: -12px; left: 1.5rem;
+    background: var(--orange);
+    color: #000;
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 3px 10px;
+    border-radius: 100px;
+  }
+  .tier-name {
+    font-family: var(--font-head);
+    font-size: 1.3rem;
+    font-weight: 800;
+    color: var(--text);
+    margin-bottom: 0.4rem;
+    letter-spacing: -0.02em;
+  }
+  .tier-card.featured .tier-name { color: var(--orange); }
+  .tier-desc {
+    font-size: 0.875rem;
+    color: var(--text-muted);
+    font-weight: 300;
+    margin-bottom: 1.75rem;
+    line-height: 1.6;
+  }
+  .tier-features {
+    list-style: none;
+    margin-bottom: 2rem;
+    display: flex; flex-direction: column; gap: 0.65rem;
+  }
+  .tier-features li {
+    font-size: 0.875rem;
+    color: var(--text-muted);
+    font-weight: 300;
+    display: flex; align-items: flex-start; gap: 9px;
+    line-height: 1.5;
+  }
+  .tier-features li::before {
+    content: '✓';
+    color: var(--orange);
+    font-weight: 600;
+    font-size: 0.8rem;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  .tier-price {
+    font-size: 0.78rem;
+    color: var(--text-dim);
+  }
+
+  /* ── INSTRUCTOR ── */
+  #instructor { background: var(--dark2); }
+  .instructor-grid {
+    display: grid;
+    grid-template-columns: 220px 1fr;
+    gap: 4rem;
+    align-items: start;
+    max-width: 900px;
+  }
+  .instructor-img {
+    width: 100%;
+    aspect-ratio: 1/1;
+    border-radius: 16px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+  }
+  .instructor-img img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    object-position: center top;
+    display: block;
+  }
+  .instructor-text p {
+    color: var(--text-muted);
+    font-weight: 300;
+    line-height: 1.8;
+    margin-bottom: 1.25rem;
+    font-size: 0.95rem;
+  }
+  .instructor-text p strong { color: var(--text); font-weight: 500; }
+  .instructor-tags {
+    display: flex; flex-wrap: wrap; gap: 8px;
+    margin-top: 1.5rem;
+  }
+  .tag {
+    background: var(--teal-dim);
+    border: 1px solid rgba(44,95,111,0.35);
+    color: var(--teal-light);
+    font-size: 0.75rem;
+    font-weight: 500;
+    padding: 4px 11px;
+    border-radius: 100px;
+  }
+
+  /* ── FINAL CTA ── */
+  #waitlist {
+    background: var(--dark);
+    text-align: center;
+  }
+  .waitlist-inner {
+    max-width: 580px;
+    margin: 0 auto;
+  }
+  .waitlist-inner .section-sub { margin: 0 auto 2.5rem; }
+  .waitlist-form {
+    display: flex; gap: 0.75rem; flex-wrap: wrap;
+    justify-content: center;
+    margin-bottom: 1rem;
+  }
+  .waitlist-form input[type="email"] {
+    flex: 1; min-width: 220px;
+    padding: 14px 18px;
+    background: var(--dark3);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 8px;
+    color: var(--text);
+    font-family: var(--font-body);
+    font-size: 0.95rem;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .waitlist-form input[type="email"]:focus { border-color: rgba(243,156,18,0.45); }
+  .waitlist-form input[type="email"]::placeholder { color: var(--text-dim); }
+  .waitlist-form button {
+    padding: 14px 26px;
+    background: var(--orange);
+    color: #000;
+    font-family: var(--font-body);
+    font-weight: 600;
+    font-size: 0.95rem;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+    box-shadow: 0 4px 20px rgba(243,156,18,0.3);
+    white-space: nowrap;
+  }
+  .waitlist-form button:hover { background: var(--orange-light); transform: translateY(-2px); box-shadow: 0 8px 28px rgba(243,156,18,0.4); }
+  .waitlist-note {
+    font-size: 0.78rem;
+    color: var(--text-dim);
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    background: var(--dark);
+    border-top: 1px solid var(--border);
+    padding: 2.5rem 5%;
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 1rem; flex-wrap: wrap;
+  }
+  .footer-logo { display: flex; align-items: center; text-decoration: none; }
+  .footer-logo img { height: 36px; width: auto; }
+  .footer-copy { font-size: 0.8rem; color: var(--text-dim); }
+  .footer-links { display: flex; gap: 1.5rem; }
+  .footer-links a {
+    font-size: 0.8rem;
+    color: var(--text-dim);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  .footer-links a:hover { color: var(--orange); }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 768px) {
+    .instructor-grid { grid-template-columns: 1fr; gap: 2rem; }
+    .instructor-img { max-width: 180px; }
+    .hero-stats { gap: 2rem; }
+    .tiers-grid { grid-template-columns: 1fr; }
+    .modules-grid { grid-template-columns: 1fr; }
+    .who-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="/" class="nav-logo">
+    <img src="logo_trimmed.png" alt="All Things Identity"/>
+  </a>
+  <a href="/" class="nav-back">
+    <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+    All courses
+  </a>
+  <a href="#waitlist" class="nav-cta">Join Waitlist</a>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-grid"></div>
+  <div class="hero-inner">
+    <div class="hero-eyebrow">
+      <span class="badge-course">New Course</span>
+      <span class="badge-q3">Launching Q3 2026</span>
+    </div>
+    <h1>Microsoft<br/><em>Entra ID</em><br/>Mastery</h1>
+    <p class="hero-sub">An 8-module deep dive into Entra ID governance, lifecycle, conditional access, and enterprise architecture — taught by a practitioner who's built this in federal and commercial environments.</p>
+
+    <div class="hero-form-wrap">
+      <form class="hero-form" action="https://app.kit.com/forms/XXX-YOUR-KIT-FORM-ID/subscriptions" method="post">
+        <input type="email" name="email_address" placeholder="your@email.com" required/>
+        <button type="submit">Get Early Access</button>
+      </form>
+      <p class="form-note">Free to join. Early access pricing for waitlist members.</p>
+    </div>
+
+    <div class="hero-stats">
+      <div>
+        <div class="stat-num">8</div>
+        <div class="stat-label">Modules</div>
+      </div>
+      <div>
+        <div class="stat-num">50+</div>
+        <div class="stat-label">Videos</div>
+      </div>
+      <div>
+        <div class="stat-num">20</div>
+        <div class="stat-label">Hands-on Labs</div>
+      </div>
+      <div>
+        <div class="stat-num">14+</div>
+        <div class="stat-label">Years Teaching This</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- WHO IT'S FOR -->
+<section id="who">
+  <span class="section-label">Who it's for</span>
+  <h2 class="section-title">Built for two types of people</h2>
+  <p class="section-sub">Whether you're already working in IAM or coming from a broader IT background, this course meets you where you are.</p>
+  <div class="who-grid">
+    <div class="who-card">
+      <div class="who-icon">🛡️</div>
+      <div class="who-title">IAM practitioners leveling up</div>
+      <div class="who-desc">You've worked with Entra ID but you're stitching together governance strategy from docs, forums, and guesswork. This course gives you a repeatable framework — not more tabs to read.</div>
+    </div>
+    <div class="who-card">
+      <div class="who-icon">🚀</div>
+      <div class="who-title">New to IAM, learning Entra ID</div>
+      <div class="who-desc">You're coming from IT, sysadmin, or a broader security background and want to learn identity right the first time — starting with the platform most enterprise environments actually run.</div>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- PROBLEM -->
+<section id="problem">
+  <div class="problem-inner">
+    <span class="section-label">Why this course exists</span>
+    <h2 class="section-title">The gap nobody talks about</h2>
+
+    <div class="problem-quote">
+      <p>You know the Entra ID syntax. You can spin up conditional access policies. But when someone asks you to design a tenant-wide identity governance strategy, you're stitching together answers from six different Microsoft docs, three Stack Overflow threads, and whatever you remember from that one Identiverse talk.</p>
+      <p>That's not a skill problem. It's a framework problem.</p>
+    </div>
+
+    <div class="problem-fix">
+      <div class="problem-fix-icon">→</div>
+      <p>This course teaches you <strong>how to think about Entra ID governance</strong>, not just how to click through the portal. Every module is built around the decisions you'll actually face — what to federate, when to automate, how to structure access for an org that keeps changing.</p>
+    </div>
+    <div class="problem-fix">
+      <div class="problem-fix-icon">→</div>
+      <p>The labs aren't sandboxed theory. They're <strong>built from real federal and commercial scenarios</strong> — the same environments where these decisions have real consequences.</p>
+    </div>
+    <div class="problem-fix">
+      <div class="problem-fix-icon">→</div>
+      <p>By the end, you won't just know Entra ID. You'll know <strong>when and why to use each piece of it</strong> — and how to explain that to the people who sign off on it.</p>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- MODULES -->
+<section id="modules">
+  <span class="section-label">Curriculum</span>
+  <h2 class="section-title">8 modules. No filler.</h2>
+  <p class="section-sub">Each module builds on the last — from tenant fundamentals to advanced enterprise scenarios.</p>
+  <div class="modules-grid">
+    <div class="module-card">
+      <div class="module-num">Module 01</div>
+      <div class="module-title">Foundations</div>
+      <div class="module-desc">Tenant configuration, hybrid identity setup, and the mental models that separate theory from practice.</div>
+    </div>
+    <div class="module-card">
+      <div class="module-num">Module 02</div>
+      <div class="module-title">Hybrid Identity & AD FS</div>
+      <div class="module-desc">Federation patterns and when — and why — to replace AD FS with Entra Conditional Access.</div>
+    </div>
+    <div class="module-card">
+      <div class="module-num">Module 03</div>
+      <div class="module-title">Authentication & Passwordless</div>
+      <div class="module-desc">MFA, FIDO2, passkeys, and building authentication strategies that actually stick in the real world.</div>
+    </div>
+    <div class="module-card">
+      <div class="module-num">Module 04</div>
+      <div class="module-title">Conditional Access</div>
+      <div class="module-desc">Beyond the basics — designing risk-aware access controls that protect without breaking workflows.</div>
+    </div>
+    <div class="module-card">
+      <div class="module-num">Module 05</div>
+      <div class="module-title">Lifecycle Workflows</div>
+      <div class="module-desc">Offboarding pipelines, JML automation, and attribute management at scale.</div>
+    </div>
+    <div class="module-card">
+      <div class="module-num">Module 06</div>
+      <div class="module-title">Enterprise Governance</div>
+      <div class="module-desc">Dynamic groups, RBAC, and structuring IAM for organizations — not just environments.</div>
+    </div>
+    <div class="module-card">
+      <div class="module-num">Module 07</div>
+      <div class="module-title">Governance & Auditing</div>
+      <div class="module-desc">Compliance frameworks, Microsoft Graph reporting, and dashboards that show what's actually happening.</div>
+    </div>
+    <div class="module-card">
+      <div class="module-num">Module 08</div>
+      <div class="module-title">Advanced Scenarios</div>
+      <div class="module-desc">Tenant-to-tenant migrations, federation in complex orgs, and high-assurance environments.</div>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- TIERS -->
+<section id="tiers">
+  <span class="section-label">Pricing</span>
+  <h2 class="section-title">Choose your path</h2>
+  <p class="section-sub">Waitlist members get early access pricing before the public launch.</p>
+  <div class="tiers-grid">
+    <div class="tier-card">
+      <div class="tier-name">Standard</div>
+      <div class="tier-desc">Everything you need to understand Entra ID deeply.</div>
+      <ul class="tier-features">
+        <li>All 8 modules + 50+ videos</li>
+        <li>20 hands-on labs</li>
+        <li>Downloadable reference guides</li>
+        <li>Community access</li>
+      </ul>
+      <div class="tier-price">Pricing announced at launch</div>
+    </div>
+    <div class="tier-card featured">
+      <div class="tier-badge">Most popular</div>
+      <div class="tier-name">Pro</div>
+      <div class="tier-desc">The course plus direct access to Andrew.</div>
+      <ul class="tier-features">
+        <li>Everything in Standard</li>
+        <li>One 30-minute 1-on-1 Q&amp;A session</li>
+        <li>Advanced lab scenarios</li>
+        <li>Priority community access</li>
+      </ul>
+      <div class="tier-price">Pricing announced at launch</div>
+    </div>
+    <div class="tier-card">
+      <div class="tier-name">Premium</div>
+      <div class="tier-desc">Full implementation support for complex environments.</div>
+      <ul class="tier-features">
+        <li>Everything in Pro</li>
+        <li>One 45-minute 1-on-1 session with Andrew</li>
+        <li>Custom lab environment</li>
+        <li>Priority email support</li>
+      </ul>
+      <div class="tier-price">Pricing announced at launch</div>
+    </div>
+  </div>
+  <a href="#waitlist" class="btn-primary">Join the waitlist for early pricing →</a>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- INSTRUCTOR -->
+<section id="instructor">
+  <span class="section-label">Your instructor</span>
+  <h2 class="section-title">Andrew Chanthaphone</h2>
+  <div class="instructor-grid">
+    <div class="instructor-img">
+      <img src="Pro_pic.jpeg" alt="Andrew Chanthaphone"/>
+    </div>
+    <div class="instructor-text">
+      <p>I'm an IAM practitioner with <strong>14+ years</strong> working across federal and commercial environments. I've led large-scale Entra ID implementations, tenant-to-tenant migrations, and identity governance programs in highly regulated environments including ARPA-H.</p>
+      <p>I've spoken at <strong>Identiverse</strong> and <strong>Cyberjutsu Con</strong>, appeared on the <em>Identity at the Center</em> podcast, and teach on <strong>LinkedIn Learning</strong>. I built the IAM Career Launchpad course — currently at 29 students — and this is the course I wish had existed when I was first figuring out Entra ID governance.</p>
+      <p>Everything in this course comes from environments where getting it wrong has real consequences. You'll learn the same decision frameworks I use on the job — not a sanitized version built for a textbook.</p>
+      <div class="instructor-tags">
+        <span class="tag">Microsoft Entra ID</span>
+        <span class="tag">SC-300</span>
+        <span class="tag">SailPoint</span>
+        <span class="tag">Okta</span>
+        <span class="tag">Federal IAM</span>
+        <span class="tag">Zero Trust</span>
+        <span class="tag">LinkedIn Learning</span>
+        <span class="tag">Identiverse Speaker</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- FINAL CTA -->
+<section id="waitlist">
+  <div class="waitlist-inner">
+    <span class="section-label">Get early access</span>
+    <h2 class="section-title">Launching Q3 2026</h2>
+    <p class="section-sub">Join the waitlist. You'll get early access pricing, updates as modules ship, and first access when enrollment opens.</p>
+    <form class="waitlist-form" action="https://app.kit.com/forms/XXX-YOUR-KIT-FORM-ID/subscriptions" method="post">
+      <input type="email" name="email_address" placeholder="your@email.com" required/>
+      <button type="submit">Join Waitlist</button>
+    </form>
+    <p class="waitlist-note">No spam, ever. Unsubscribe anytime.</p>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <a href="/" class="footer-logo">
+    <img src="logo_trimmed.png" alt="All Things Identity"/>
+  </a>
+  <p class="footer-copy">© 2026 All Things Identity. Built by Andrew Chanthaphone.</p>
+  <div class="footer-links">
+    <a href="https://www.youtube.com/@AllThingsIAM" target="_blank">YouTube</a>
+    <a href="https://www.linkedin.com/in/andrewchanthaphone/" target="_blank">LinkedIn</a>
+    <a href="mailto:andrew@allthingsidentity.com">Email</a>
+  </div>
+</footer>
+
+</body>
+</html>
