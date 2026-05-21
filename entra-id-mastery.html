@@ -601,6 +601,68 @@
     .modules-grid { grid-template-columns: 1fr; }
     .who-grid { grid-template-columns: 1fr; }
   }
+  /* ── KIT FORM OVERRIDES ── */
+  .formkit-form[data-uid="87b64b8d9f"] { max-width: 100% !important; }
+  .formkit-form[data-uid="87b64b8d9f"] [data-style="clean"] { padding: 0 !important; }
+  .kit-hero-fields,
+  .kit-waitlist-fields {
+    display: flex !important;
+    flex-direction: row !important;
+    flex-wrap: wrap !important;
+    gap: 0.75rem !important;
+    margin: 0 !important;
+  }
+  .kit-hero-fields .formkit-field,
+  .kit-waitlist-fields .formkit-field {
+    flex: 1 !important;
+    min-width: 220px !important;
+    margin: 0 !important;
+  }
+  .kit-hero-fields .formkit-submit,
+  .kit-waitlist-fields .formkit-submit {
+    flex: 0 0 auto !important;
+    margin: 0 !important;
+  }
+  .kit-input {
+    width: 100% !important;
+    padding: 14px 18px !important;
+    background: var(--dark3) !important;
+    border: 1px solid rgba(255,255,255,0.1) !important;
+    border-radius: 8px !important;
+    color: var(--text) !important;
+    font-family: var(--font-body) !important;
+    font-size: 0.95rem !important;
+    outline: none !important;
+    transition: border-color 0.2s !important;
+    height: auto !important;
+  }
+  .kit-input:focus { border-color: rgba(243,156,18,0.45) !important; }
+  .kit-input::placeholder { color: var(--text-dim) !important; opacity: 1 !important; }
+  .kit-submit {
+    padding: 14px 26px !important;
+    background: var(--orange) !important;
+    color: #000 !important;
+    font-family: var(--font-body) !important;
+    font-weight: 600 !important;
+    font-size: 0.95rem !important;
+    border: none !important;
+    border-radius: 8px !important;
+    cursor: pointer !important;
+    box-shadow: 0 4px 20px rgba(243,156,18,0.3) !important;
+    white-space: nowrap !important;
+    transition: background 0.2s, transform 0.15s !important;
+  }
+  .kit-submit:hover { background: var(--orange-light) !important; transform: translateY(-2px) !important; }
+  .kit-submit > span { padding: 0 !important; }
+  .formkit-powered-by-convertkit-container { display: none !important; }
+  .formkit-alert-error {
+    background: rgba(242,100,59,0.1) !important;
+    border-color: #f2643b !important;
+    color: #f2643b !important;
+    border-radius: 8px !important;
+    font-size: 0.85rem !important;
+    margin-bottom: 0.75rem !important;
+  }
 </style>
 </head>
 <body>
@@ -630,9 +692,20 @@
     <p class="hero-sub">An 8-module deep dive into Entra ID governance, lifecycle, conditional access, and enterprise architecture — taught by a practitioner who's built this in federal and commercial environments.</p>
 
     <div class="hero-form-wrap">
-      <form class="hero-form" action="https://app.kit.com/forms/9472082/subscriptions" method="post">
-        <input type="email" name="email_address" placeholder="your@email.com" required/>
-        <button type="submit">Get Early Access</button>
+      <script src="https://f.convertkit.com/ckjs/ck.5.js"></script>
+      <form action="https://app.kit.com/forms/9472082/subscriptions" class="seva-form formkit-form" method="post" data-sv-form="9472082" data-uid="87b64b8d9f" data-format="inline" data-version="5" min-width="400 500 600 700 800">
+        <div data-style="clean">
+          <ul class="formkit-alert formkit-alert-error" data-element="errors" data-group="alert"></ul>
+          <div data-element="fields" data-stacked="false" class="seva-fields formkit-fields kit-hero-fields">
+            <div class="formkit-field">
+              <input class="formkit-input kit-input" name="email_address" aria-label="Email Address" placeholder="your@email.com" required type="email"/>
+            </div>
+            <button data-element="submit" class="formkit-submit kit-submit">
+              <div class="formkit-spinner"><div></div><div></div><div></div></div>
+              <span>Get Early Access</span>
+            </button>
+          </div>
+        </div>
       </form>
       <p class="form-note">Free to join. Early access pricing for waitlist members.</p>
     </div>
@@ -840,9 +913,19 @@
     <span class="section-label">Get early access</span>
     <h2 class="section-title">Launching Q3 2026</h2>
     <p class="section-sub">Join the waitlist. You'll get early access pricing, updates as modules ship, and first access when enrollment opens.</p>
-    <form class="waitlist-form" action="https://app.kit.com/forms/9472082/subscriptions" method="post">
-      <input type="email" name="email_address" placeholder="your@email.com" required/>
-      <button type="submit">Join Waitlist</button>
+    <form action="https://app.kit.com/forms/9472082/subscriptions" class="seva-form formkit-form" method="post" data-sv-form="9472082" data-uid="87b64b8d9f" data-format="inline" data-version="5" min-width="400 500 600 700 800">
+      <div data-style="clean">
+        <ul class="formkit-alert formkit-alert-error" data-element="errors" data-group="alert"></ul>
+        <div data-element="fields" data-stacked="false" class="seva-fields formkit-fields kit-waitlist-fields">
+          <div class="formkit-field">
+            <input class="formkit-input kit-input" name="email_address" aria-label="Email Address" placeholder="your@email.com" required type="email"/>
+          </div>
+          <button data-element="submit" class="formkit-submit kit-submit">
+            <div class="formkit-spinner"><div></div><div></div><div></div></div>
+            <span>Join Waitlist</span>
+          </button>
+        </div>
+      </div>
     </form>
     <p class="waitlist-note">No spam, ever. Unsubscribe anytime.</p>
   </div>
