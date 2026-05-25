@@ -1,0 +1,1830 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lacrosse Off-Season Program</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --black: #0a0a0a;
+    --white: #f5f5f0;
+    --green: #1a7a3c;
+    --green-light: #2ea84f;
+    --gold: #d4a017;
+    --gold-light: #f0c040;
+    --gray: #1e1e1e;
+    --gray-mid: #2e2e2e;
+    --gray-light: #444;
+    --text-dim: #999;
+    --attack: #c0392b;
+    --defense: #1a5fa8;
+    --midfield: #1a7a3c;
+    --faceoff: #8e44ad;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--black);
+    color: var(--white);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
+    line-height: 1.6;
+  }
+
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, #0a0a0a 0%, #111 40%, #0f1f0f 100%);
+    border-bottom: 3px solid var(--gold);
+    padding: 48px 40px 36px;
+    position: relative;
+    overflow: hidden;
+  }
+  header::before {
+    content: "◆";
+    font-size: 400px;
+    position: absolute;
+    right: -60px;
+    top: -100px;
+    opacity: 0.03;
+    color: var(--gold);
+    line-height: 1;
+  }
+  .header-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+  header h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(52px, 8vw, 96px);
+    letter-spacing: 0.03em;
+    line-height: 0.9;
+    color: var(--white);
+  }
+  header h1 span { color: var(--gold); }
+  .header-sub {
+    margin-top: 16px;
+    color: var(--text-dim);
+    font-size: 14px;
+    max-width: 560px;
+  }
+  .header-meta {
+    display: flex;
+    gap: 24px;
+    margin-top: 24px;
+    flex-wrap: wrap;
+  }
+  .meta-pill {
+    background: var(--gray);
+    border: 1px solid var(--gray-light);
+    padding: 6px 14px;
+    border-radius: 2px;
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    color: var(--text-dim);
+  }
+  .meta-pill strong { color: var(--white); }
+
+  /* NAV */
+  nav {
+    background: var(--gray);
+    border-bottom: 1px solid var(--gray-mid);
+    padding: 0 40px;
+    display: flex;
+    gap: 0;
+    overflow-x: auto;
+    scrollbar-width: none;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  nav::-webkit-scrollbar { display: none; }
+  .nav-btn {
+    background: none;
+    border: none;
+    color: var(--text-dim);
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 16px 20px;
+    cursor: pointer;
+    white-space: nowrap;
+    border-bottom: 2px solid transparent;
+    transition: color 0.2s, border-color 0.2s;
+  }
+  .nav-btn:hover { color: var(--white); }
+  .nav-btn.active { color: var(--white); border-bottom-color: var(--gold); }
+  .nav-btn[data-pos="attack"].active { border-bottom-color: var(--attack); }
+  .nav-btn[data-pos="defense"].active { border-bottom-color: var(--defense); }
+  .nav-btn[data-pos="midfield"].active { border-bottom-color: var(--midfield); }
+  .nav-btn[data-pos="faceoff"].active { border-bottom-color: var(--faceoff); }
+
+  /* MAIN */
+  main {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 48px 40px 80px;
+  }
+
+  /* SECTIONS */
+  .section { display: none; }
+  .section.active { display: block; }
+
+  /* POSITION BADGE */
+  .pos-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    padding: 4px 12px;
+    border-radius: 2px;
+    margin-bottom: 20px;
+  }
+  .pos-badge.attack { background: rgba(192,57,43,0.15); color: #e74c3c; border: 1px solid rgba(192,57,43,0.3); }
+  .pos-badge.defense { background: rgba(26,95,168,0.15); color: #3498db; border: 1px solid rgba(26,95,168,0.3); }
+  .pos-badge.midfield { background: rgba(26,122,60,0.15); color: #2ecc71; border: 1px solid rgba(26,122,60,0.3); }
+  .pos-badge.faceoff { background: rgba(142,68,173,0.15); color: #9b59b6; border: 1px solid rgba(142,68,173,0.3); }
+  .pos-badge.speed { background: rgba(212,160,23,0.15); color: var(--gold-light); border: 1px solid rgba(212,160,23,0.3); }
+  .pos-badge.lift { background: rgba(255,255,255,0.08); color: #aaa; border: 1px solid rgba(255,255,255,0.12); }
+
+  .section-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(36px, 5vw, 56px);
+    letter-spacing: 0.04em;
+    line-height: 1;
+    color: var(--white);
+    margin-bottom: 8px;
+  }
+  .section-intro {
+    color: var(--text-dim);
+    max-width: 680px;
+    margin-bottom: 40px;
+    font-size: 14px;
+  }
+
+  /* OVERVIEW / CALENDAR */
+  .calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 2px;
+    margin-bottom: 40px;
+  }
+  @media (max-width: 700px) { .calendar-grid { grid-template-columns: repeat(2, 1fr); } }
+  .cal-phase {
+    padding: 20px;
+    border-radius: 2px;
+  }
+  .cal-phase.p1 { background: linear-gradient(135deg, #1a1a1a, #111); border-top: 3px solid #555; }
+  .cal-phase.p2 { background: linear-gradient(135deg, #0f1a10, #0a120a); border-top: 3px solid var(--green); }
+  .cal-phase.p3 { background: linear-gradient(135deg, #1a1500, #120f00); border-top: 3px solid var(--gold); }
+  .cal-phase.p4 { background: linear-gradient(135deg, #150010, #0f000a); border-top: 3px solid #9b59b6; }
+  .cal-phase .phase-num {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    color: var(--text-dim);
+    margin-bottom: 4px;
+  }
+  .cal-phase .phase-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 22px;
+    letter-spacing: 0.06em;
+    margin-bottom: 6px;
+  }
+  .cal-phase .phase-weeks {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--text-dim);
+    margin-bottom: 10px;
+  }
+  .cal-phase .phase-desc {
+    font-size: 12px;
+    color: #888;
+    line-height: 1.5;
+  }
+
+  /* BLOCKS */
+  .block {
+    background: var(--gray);
+    border-left: 3px solid var(--gray-light);
+    border-radius: 0 4px 4px 0;
+    margin-bottom: 24px;
+    overflow: hidden;
+  }
+  .block.attack-block { border-left-color: var(--attack); }
+  .block.defense-block { border-left-color: var(--defense); }
+  .block.midfield-block { border-left-color: var(--midfield); }
+  .block.faceoff-block { border-left-color: var(--faceoff); }
+  .block.speed-block { border-left-color: var(--gold); }
+  .block.lift-block { border-left-color: #555; }
+
+  .block-header {
+    padding: 16px 20px;
+    background: rgba(255,255,255,0.03);
+    border-bottom: 1px solid var(--gray-mid);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    user-select: none;
+  }
+  .block-header:hover { background: rgba(255,255,255,0.05); }
+  .block-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 20px;
+    letter-spacing: 0.06em;
+    color: var(--white);
+  }
+  .block-meta {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--text-dim);
+    margin-top: 2px;
+  }
+  .block-toggle {
+    font-size: 20px;
+    color: var(--text-dim);
+    transition: transform 0.2s;
+    flex-shrink: 0;
+  }
+  .block.open .block-toggle { transform: rotate(180deg); }
+  .block-body {
+    display: none;
+    padding: 20px;
+  }
+  .block.open .block-body { display: block; }
+
+  /* DRILLS */
+  .drill-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 16px;
+    margin-bottom: 16px;
+  }
+  .drill-card {
+    background: var(--gray-mid);
+    border-radius: 4px;
+    padding: 16px;
+    border: 1px solid rgba(255,255,255,0.06);
+  }
+  .drill-name {
+    font-weight: 700;
+    font-size: 13px;
+    color: var(--white);
+    margin-bottom: 4px;
+  }
+  .drill-detail {
+    font-size: 12px;
+    color: #888;
+    line-height: 1.5;
+    margin-bottom: 8px;
+  }
+  .drill-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+  }
+  .tag {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.1em;
+    padding: 2px 7px;
+    border-radius: 2px;
+    text-transform: uppercase;
+  }
+  .tag.reps { background: rgba(255,255,255,0.07); color: #aaa; }
+  .tag.sets { background: rgba(255,255,255,0.07); color: #aaa; }
+  .tag.time { background: rgba(255,215,0,0.1); color: var(--gold-light); }
+  .tag.focus { background: rgba(46,204,113,0.1); color: #2ecc71; }
+  .tag.hard { background: rgba(231,76,60,0.12); color: #e74c3c; }
+
+  /* VIDEO REF CARD */
+  .video-ref {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 4px;
+    padding: 10px 14px;
+    margin-top: 8px;
+    text-decoration: none;
+    color: var(--white);
+    transition: background 0.15s;
+  }
+  .video-ref:hover { background: rgba(255,255,255,0.08); }
+  .video-icon {
+    width: 32px;
+    height: 32px;
+    background: #ff0000;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    font-size: 12px;
+  }
+  .video-info { flex: 1; }
+  .video-title { font-size: 12px; font-weight: 500; }
+  .video-channel { font-size: 11px; color: var(--text-dim); font-family: 'DM Mono', monospace; }
+
+  /* WORKOUT TABLE */
+  .workout-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+    margin-bottom: 16px;
+  }
+  .workout-table th {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    padding: 8px 12px;
+    text-align: left;
+    border-bottom: 1px solid var(--gray-mid);
+    background: rgba(255,255,255,0.02);
+  }
+  .workout-table td {
+    padding: 10px 12px;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+    color: #ccc;
+    vertical-align: top;
+  }
+  .workout-table tr:hover td { background: rgba(255,255,255,0.02); }
+  .workout-table .ex-name { color: var(--white); font-weight: 500; }
+  .workout-table .ex-note { color: var(--text-dim); font-size: 11px; }
+  .workout-table .scheme { font-family: 'DM Mono', monospace; font-size: 11px; color: var(--gold-light); }
+
+  /* WEEK SCHEDULE */
+  .week-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 4px;
+    margin-bottom: 16px;
+  }
+  @media (max-width: 700px) { .week-grid { grid-template-columns: repeat(3, 1fr); } }
+  .day-card {
+    background: var(--gray-mid);
+    border-radius: 3px;
+    padding: 10px 8px;
+    text-align: center;
+    border-top: 2px solid transparent;
+    font-size: 11px;
+  }
+  .day-card .day-name {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin-bottom: 6px;
+  }
+  .day-card .day-content { font-size: 11px; color: #ccc; line-height: 1.4; }
+  .day-card.lift-day { border-top-color: #555; }
+  .day-card.speed-day { border-top-color: var(--gold); }
+  .day-card.stick-day { border-top-color: var(--green); }
+  .day-card.rest-day { border-top-color: transparent; opacity: 0.4; }
+  .day-card.combo-day { border-top-color: var(--defense); }
+
+  /* CALLOUT */
+  .callout {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 4px;
+    padding: 16px 20px;
+    margin-bottom: 20px;
+    font-size: 13px;
+    color: #aaa;
+    line-height: 1.6;
+  }
+  .callout strong { color: var(--white); }
+  .callout.warn { border-color: rgba(231,76,60,0.25); background: rgba(231,76,60,0.05); }
+  .callout.gold { border-color: rgba(212,160,23,0.25); background: rgba(212,160,23,0.05); }
+
+  /* PROGRESSION CHART */
+  .progress-bar-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 10px;
+  }
+  .progress-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--text-dim);
+    width: 110px;
+    flex-shrink: 0;
+  }
+  .progress-track {
+    flex: 1;
+    height: 6px;
+    background: var(--gray-mid);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    border-radius: 3px;
+    transition: width 0.8s ease;
+  }
+  .progress-val {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: #666;
+    width: 36px;
+    text-align: right;
+  }
+
+  /* DIVIDER */
+  .divider {
+    border: none;
+    border-top: 1px solid var(--gray-mid);
+    margin: 28px 0;
+  }
+
+  h3 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 20px;
+    letter-spacing: 0.06em;
+    color: var(--white);
+    margin-bottom: 12px;
+  }
+  h4 {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--white);
+    margin-bottom: 8px;
+    margin-top: 16px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+  }
+
+  p { margin-bottom: 12px; font-size: 14px; color: #bbb; }
+
+  ul {
+    margin-bottom: 12px;
+    padding-left: 18px;
+  }
+  li { font-size: 13px; color: #aaa; margin-bottom: 4px; line-height: 1.5; }
+  li strong { color: var(--white); }
+
+  /* FOOTER */
+  footer {
+    background: var(--gray);
+    border-top: 1px solid var(--gray-mid);
+    padding: 24px 40px;
+    text-align: center;
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--text-dim);
+    letter-spacing: 0.1em;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-label">Centreville Lacrosse — Off-Season Program</div>
+  <h1>OFF-SEASON<br><span>LACROSSE</span></h1>
+  <p class="header-sub">A 16-week position-specific program covering stick skills, strength training, and speed development. Built for JV and varsity players.</p>
+  <div class="header-meta">
+    <div class="meta-pill"><strong>16 weeks</strong> — 4 phases</div>
+    <div class="meta-pill"><strong>4</strong> positions covered</div>
+    <div class="meta-pill">JV + <strong>Varsity</strong></div>
+    <div class="meta-pill"><strong>5 days/week</strong> training</div>
+  </div>
+</header>
+
+<nav>
+  <button class="nav-btn active" data-section="overview" onclick="showSection('overview', this)">Overview</button>
+  <button class="nav-btn" data-section="attack" data-pos="attack" onclick="showSection('attack', this)">Attack</button>
+  <button class="nav-btn" data-section="defense" data-pos="defense" onclick="showSection('defense', this)">Defense</button>
+  <button class="nav-btn" data-section="midfield" data-pos="midfield" onclick="showSection('midfield', this)">Midfield</button>
+  <button class="nav-btn" data-section="faceoff" data-pos="faceoff" onclick="showSection('faceoff', this)">Faceoff</button>
+  <button class="nav-btn" data-section="speed" onclick="showSection('speed', this)">Speed</button>
+  <button class="nav-btn" data-section="lifting" onclick="showSection('lifting', this)">Lifting</button>
+</nav>
+
+<main>
+
+<!-- ============ OVERVIEW ============ -->
+<div class="section active" id="section-overview">
+  <div class="pos-badge lift">Program Overview</div>
+  <div class="section-title">16-Week Plan</div>
+  <p class="section-intro">Four phases, each building on the last. Phase 1 lays the foundation. Phase 4 sharpens everything for tryouts and opening day.</p>
+
+  <div class="calendar-grid">
+    <div class="cal-phase p1">
+      <div class="phase-num">Phase 01</div>
+      <div class="phase-title">Foundation</div>
+      <div class="phase-weeks">Weeks 1–4</div>
+      <div class="phase-desc">Movement prep, general strength base, stick fundamentals, body conditioning. Light-to-moderate intensity.</div>
+    </div>
+    <div class="cal-phase p2">
+      <div class="phase-num">Phase 02</div>
+      <div class="phase-title">Build</div>
+      <div class="phase-weeks">Weeks 5–9</div>
+      <div class="phase-desc">Increase load, position-specific drills, speed development, introduce game-speed reps.</div>
+    </div>
+    <div class="cal-phase p3">
+      <div class="phase-num">Phase 03</div>
+      <div class="phase-title">Power</div>
+      <div class="phase-weeks">Weeks 10–13</div>
+      <div class="phase-desc">Explosive lifts, high-volume stick work, full-speed agility. Peak workload week 12.</div>
+    </div>
+    <div class="cal-phase p4">
+      <div class="phase-num">Phase 04</div>
+      <div class="phase-title">Sharpen</div>
+      <div class="phase-weeks">Weeks 14–16</div>
+      <div class="phase-desc">Volume drops 30%. Speed maintained. Stick mastery at full pace. Pre-season ready by week 16.</div>
+    </div>
+  </div>
+
+  <div class="callout gold">
+    <strong>JV vs Varsity notes:</strong> JV players follow the same program with reduced volume. Where varsity does 4 sets, JV does 3. Where varsity runs 6×40yd, JV runs 4×40yd. All stick drills are identical — there's no shortcut to skill.
+  </div>
+
+  <h3>Weekly Schedule Template</h3>
+  <div class="week-grid">
+    <div class="day-card combo-day">
+      <div class="day-name">Mon</div>
+      <div class="day-content">Lift<br>+ Stick (60 min)</div>
+    </div>
+    <div class="day-card speed-day">
+      <div class="day-name">Tue</div>
+      <div class="day-content">Speed &amp; Agility (45 min)</div>
+    </div>
+    <div class="day-card stick-day">
+      <div class="day-name">Wed</div>
+      <div class="day-content">Stick Only (90 min)</div>
+    </div>
+    <div class="day-card lift-day">
+      <div class="day-name">Thu</div>
+      <div class="day-content">Lift (60 min)</div>
+    </div>
+    <div class="day-card combo-day">
+      <div class="day-name">Fri</div>
+      <div class="day-content">Speed + Stick (75 min)</div>
+    </div>
+    <div class="day-card stick-day">
+      <div class="day-name">Sat</div>
+      <div class="day-content">Stick + Optional Scrimmage</div>
+    </div>
+    <div class="day-card rest-day">
+      <div class="day-name">Sun</div>
+      <div class="day-content">Rest / Recovery</div>
+    </div>
+  </div>
+
+  <h3>Load Progression (% of peak volume)</h3>
+  <div style="background: var(--gray); border-radius: 4px; padding: 20px; margin-bottom: 24px;">
+    <div class="progress-bar-row">
+      <div class="progress-label">Weeks 1–4</div>
+      <div class="progress-track"><div class="progress-fill" style="width: 55%; background: #555;"></div></div>
+      <div class="progress-val">55%</div>
+    </div>
+    <div class="progress-bar-row">
+      <div class="progress-label">Weeks 5–9</div>
+      <div class="progress-track"><div class="progress-fill" style="width: 75%; background: var(--green);"></div></div>
+      <div class="progress-val">75%</div>
+    </div>
+    <div class="progress-bar-row">
+      <div class="progress-label">Weeks 10–13</div>
+      <div class="progress-track"><div class="progress-fill" style="width: 100%; background: var(--gold);"></div></div>
+      <div class="progress-val">100%</div>
+    </div>
+    <div class="progress-bar-row">
+      <div class="progress-label">Weeks 14–16</div>
+      <div class="progress-track"><div class="progress-fill" style="width: 65%; background: #9b59b6;"></div></div>
+      <div class="progress-val">65%</div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <h3>2026 NFHS Rule Changes — All Players Must Know</h3>
+  <p style="color:#888; font-size:13px; margin-bottom:16px;">These are active for the 2026 season. Ignorance of a rule does not prevent the penalty. Go over these with your team before the first practice.</p>
+
+  <div style="display:grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap:12px; margin-bottom:24px;">
+    <div class="callout warn" style="margin-bottom:0;">
+      <strong>Crease ban — Defense (Rules 4-18-4, 5-6-2)</strong><br>
+      No field player other than a properly equipped goalkeeper may enter their own crease with intent to block a shot. Penalty: non-releasable personal foul for illegal equipment. This applies to all defensemen.
+    </div>
+    <div class="callout warn" style="margin-bottom:0;">
+      <strong>Faceoff positioning (Rule 4-3-3e)</strong><br>
+      If a faceoff player must be repeatedly adjusted by an official, a delay-of-game penalty can be called and possession awarded to the opponent. Get your set position right in practice — not at the whistle.
+    </div>
+    <div class="callout warn" style="margin-bottom:0;">
+      <strong>Expanded holding (Rule 5-1)</strong><br>
+      Holding now includes hooking, lifting, or pinning an opponent's body with the crosse. Lift checks targeting the stick remain legal. Any crosse contact with the body in a pinning or hooking pattern is a foul.
+    </div>
+    <div class="callout warn" style="margin-bottom:0;">
+      <strong>Helmet loss (Rule 4-illegal procedure)</strong><br>
+      Losing your helmet during play and continuing is now a technical foul for illegal procedure. Fit chin straps properly before every practice and game. No exceptions.
+    </div>
+    <div class="callout warn" style="margin-bottom:0;">
+      <strong>All restarts now lateral (Rule 7-3)</strong><br>
+      All restarts after penalties now occur laterally outside the goal area. No more restarts that allow a straight sprint toward cage. Offenses and defenses need to adjust restart positioning habits in practice.
+    </div>
+    <div class="callout gold" style="margin-bottom:0;">
+      <strong>Motogrip / Motorcycle grip</strong><br>
+      Not a legal set position under NFHS rules. Any player whose top hand is rotated palm-down over the shaft (thumb pointing toward the head) will be adjusted. Repeated adjustment = delay of game. Do not drill this grip.
+    </div>
+  </div>
+
+  <div class="callout warn">
+    <strong>Injury prevention first.</strong> Any player with prior injury should clear return-to-activity with their trainer or physician before entering Phase 2. Do not skip Phase 1 to catch up.
+  </div>
+</div>
+
+
+<!-- ============ ATTACK ============ -->
+<div class="section" id="section-attack">
+  <div class="pos-badge attack">Attackmen</div>
+  <div class="section-title">Attack Program</div>
+  <p class="section-intro">Attackmen need quick hands, sharp dodges off X and from behind, and reliable shooting on the run. Every drill in this section is built around those three things.</p>
+
+  <div class="callout gold">
+    <strong>2026 rule that affects attackmen:</strong> All penalty restarts now occur laterally outside the goal area (Rule 7-3). That means no more straight-line runs to cage off a restart — defenders will be set laterally. Drill your restart positioning and first-move options off a lateral set accordingly.
+  </div>
+
+  <!-- STICK SKILLS -->
+  <div class="block attack-block open">
+    <div class="block-header" onclick="toggleBlock(this)">
+      <div>
+        <div class="block-title">Stick Skills — Daily Routine</div>
+        <div class="block-meta">40 min / session · 6 days/week</div>
+      </div>
+      <div class="block-toggle">▾</div>
+    </div>
+    <div class="block-body">
+      <div class="callout">
+        <strong>Wall ball is non-negotiable.</strong> 500 reps minimum every session. The breakdown below is the full sequence. Any player who cannot do 300 quality reps in 15 minutes should be at 300 until they can.
+      </div>
+
+      <h4>Wall Ball Sequence (500 reps)</h4>
+      <div class="drill-grid">
+        <div class="drill-card">
+          <div class="drill-name">Strong Hand Basics</div>
+          <div class="drill-detail">Right-hand throws, one-hand catch. Focus on wrist snap and follow-through pointed at target. Keep elbow up.</div>
+          <div class="drill-tags"><span class="tag reps">100 reps</span><span class="tag focus">Mechanics</span></div>
+        </div>
+        <div class="drill-card">
+          <div class="drill-name">Weak Hand Basics</div>
+          <div class="drill-detail">Same as above, off-hand only. Most attackmen have a 60/40 hand split. Goal is 50/50 by end of off-season.</div>
+          <div class="drill-tags"><span class="tag reps">100 reps</span><span class="tag focus">Weak hand</span></div>
+        </div>
+        <div class="drill-card">
+          <div class="drill-name">Quick Stick</div>
+          <div class="drill-detail">Ball comes off wall, catch and release in one motion. No cradle. Simulate a pass-and-shoot or quick feed scenario.</div>
+          <div class="drill-tags"><span class="tag reps">100 reps</span><span class="tag focus">Release speed</span></div>
+        </div>
+        <div class="drill-card">
+          <div class="drill-name">Switch Hands</div>
+          <div class="drill-detail">Throw right, catch left. Throw left, catch right. Forces footwork adjustment and cross-body catching.</div>
+          <div class="drill-tags"><span class="tag reps">100 reps</span><span class="tag focus">Ambidextrous</span></div>
+        </div>
+        <div class="drill-card">
+          <div class="drill-name">Behind the Back</div>
+          <div class="drill-detail">Pull the stick behind the back, throw off the wall, catch with strong hand. Develops full-body stick awareness.</div>
+          <div class="drill-tags"><span class="tag reps">50 reps</span><span class="tag focus">Advanced</span></div>
+        </div>
+        <div class="drill-card">
+          <div class="drill-name">One-Knee Shooting</div>
+          <div class="drill-detail">Drop to the non-dominant knee. Throw hard at a target on the wall. Isolates upper body mechanics for shooting form.</div>
+          <div class="drill-tags"><span class="tag reps">50 reps</span><span class="tag focus">Shooting</span></div>
+        </div>
+      </div>
+
+      <a class="video-ref" href="https://www.youtube.com/results?search_query=lacrosse+attackman+wall+ball+drills" target="_blank">
+        <div class="video-icon">▶</div>
+        <div class="video-info">
+          <div class="video-title">Search: "Lacrosse Attackman Wall Ball Drills"</div>
+          <div class="video-channel">YouTube — Lacrosse Drive, LaxAllStars recommended</div>
+        </div>
+      </a>
+
+      <hr class="divider">
+
+      <h4>Dodge Sequence (Partner or Solo)</h4>
+      <div class="drill-grid">
+        <div class="drill-card">
+          <div class="drill-name">Face Dodge — Cone Line</div>
+          <div class="drill-detail">Set up 5 cones 3 yards apart. Approach each at game speed, pull the stick across the face, accelerate past. Alternate lead hand at each cone.</div>
+          <div class="drill-tags"><span class="tag sets">4 sets</span><span class="tag reps">5 reps</span><span class="tag time">90s rest</span></div>
+        </div>
+        <div class="drill-card">
+          <div class="drill-name">Roll Dodge — X</div>
+          <div class="drill-detail">Start at X (behind the cage). Drive hard at the 8-meter arc, plant outside foot hard, roll the defender, explode to pipe. Finish with a shot.</div>
+          <div class="drill-tags"><span class="tag sets">3 sets</span><span class="tag reps">6 reps each side</span></div>
+        </div>
+        <div class="drill-card">
+          <div class="drill-name">Split Dodge — Midline</div>
+          <div class="drill-detail">Drive straight at a cone, catch the ball inside out, split the stick from one hand to the other, burst through. Hands stay tight on the switch.</div>
+          <div class="drill-tags"><span class="tag sets">3 sets</span><span class="tag reps">6 reps</span><span class="tag focus">Hands</span></div>
+        </div>
+        <div class="drill-card">
+          <div class="drill-name">Ball-in-Glove Catch Drill</div>
+          <div class="drill-detail">Partner or rebounder feeds fast passes from 8 yards. Receiver must secure and immediately dodge in one motion — no reset allowed.</div>
+          <div class="drill-tags"><span class="tag sets">4 sets</span><span class="tag reps">8 reps</span><span class="tag hard">Game speed</span></div>
+        </div>
+      </div>
+
+      <hr class="divider">
+
+      <h4>Shooting Drills</h4>
+      <div class="drill-grid">
+        <div class="drill-card">
+          <div class="drill-name">Alley Dodge Finish</div>
+          <div class="drill-detail">Alley runs from the wing. Catch on the run, one-step fake, shoot far side low. All reps at full speed — no walking-speed reps.</div>
+          <div class="drill-tags"><span class="tag reps">10 reps each side</span><span class="tag hard">Game speed</span></div>
+        </div>
+        <div class="drill-card">
+          <div class="drill-name">Around-the-World Shooting</div>
+          <div class="drill-detail">5 spots around the arc. 3 shots per spot. Track goals and misses. Compete each session against your previous score. Low-high alternating.</div>
+          <div class="drill-tags"><span class="tag reps">15 total shots</span><span class="tag focus">Accuracy</span></div>
+        </div>
+        <div class="drill-card">
+          <div class="drill-name">Behind-the-Back Feed + Shoot</div>
+          <div class="drill-detail">Attackman receives a BTB pass from a teammate at X. Catches and immediately fires low on cage. Develops full-field awareness + composure.</div>
+          <div class="drill-tags"><span class="tag sets">3 sets</span><span class="tag reps">6 reps</span></div>
+        </div>
+      </div>
+
+      <a class="video-ref" href="https://www.youtube.com/results?search_query=lacrosse+attackman+shooting+drills+off+X" target="_blank">
+        <div class="video-icon">▶</div>
+        <div class="video-info">
+          <div class="video-title">Search: "Lacrosse Shooting Drills off X Attackman"</div>
+          <div class="video-channel">YouTube — STX Lacrosse, Lax.com recommended</div>
+        </div>
+      </a>
+    </div>
+  </div>
+
+  <!-- ATTACK LIFTING -->
+  <div class="block attack-block">
+    <div class="block-header" onclick="toggleBlock(this)">
+      <div>
+        <div class="block-title">Strength Program — Attackmen</div>
+        <div class="block-meta">3 days/week · 60 min · Upper/Lower/Total split</div>
+      </div>
+      <div class="block-toggle">▾</div>
+    </div>
+    <div class="block-body">
+      <p>Attackmen need rotational power, explosive hip extension for dodges, and upper-body pulling strength for shielding and stick battles. The priority is <strong>power output, not mass</strong>. No one wants a 220lb attackman who can't change direction.</p>
+
+      <h4>Day A — Lower Body + Rotation</h4>
+      <table class="workout-table">
+        <thead><tr><th>Exercise</th><th>Scheme</th><th>Notes</th></tr></thead>
+        <tbody>
+          <tr><td class="ex-name">Trap Bar Deadlift</td><td class="scheme">4×5 @70–80%</td><td class="ex-note">Drive floor away. Full hip extension. Not a back exercise.</td></tr>
+          <tr><td class="ex-name">Bulgarian Split Squat</td><td class="scheme">3×8 each leg</td><td class="ex-note">Rear foot elevated. Load with DBs or goblet. Builds single-leg power for dodges.</td></tr>
+          <tr><td class="ex-name">Nordic Hamstring Curl</td><td class="scheme">3×5 eccentric</td><td class="ex-note">Go slow on the way down. Use partner or anchor. Best hamstring injury prevention exercise.</td></tr>
+          <tr><td class="ex-name">Med Ball Rotational Throw</td><td class="scheme">4×6 each side</td><td class="ex-note">Against wall. Max velocity intent. Same plane as shooting mechanics.</td></tr>
+          <tr><td class="ex-name">Pallof Press</td><td class="scheme">3×10 each side</td><td class="ex-note">Anti-rotation. Light band/cable. Pause at full extension 2 seconds.</td></tr>
+        </tbody>
+      </table>
+
+      <h4>Day B — Upper Body Push/Pull</h4>
+      <table class="workout-table">
+        <thead><tr><th>Exercise</th><th>Scheme</th><th>Notes</th></tr></thead>
+        <tbody>
+          <tr><td class="ex-name">Dumbbell Bench Press</td><td class="scheme">4×8</td><td class="ex-note">Neutral grip. Full range. Arch is fine, exaggerated arch is not.</td></tr>
+          <tr><td class="ex-name">Chest-Supported Row</td><td class="scheme">4×10</td><td class="ex-note">Squeeze at the top. Elbows at 45°. Trains the pull motion in stick checks.</td></tr>
+          <tr><td class="ex-name">Single-Arm Cable Press</td><td class="scheme">3×12 each arm</td><td class="ex-note">Trains unilateral push — important for dodging and shooting.</td></tr>
+          <tr><td class="ex-name">Band Pull-Apart</td><td class="scheme">3×20</td><td class="ex-note">Keep arms straight. Shoulder health maintenance.</td></tr>
+          <tr><td class="ex-name">Face Pulls</td><td class="scheme">3×15</td><td class="ex-note">External rotation. Prevents the internal rotation pattern lacrosse players develop.</td></tr>
+        </tbody>
+      </table>
+
+      <h4>Day C — Full Body Power</h4>
+      <table class="workout-table">
+        <thead><tr><th>Exercise</th><th>Scheme</th><th>Notes</th></tr></thead>
+        <tbody>
+          <tr><td class="ex-name">Power Clean (or DB Jump Shrug)</td><td class="scheme">4×3 @65–75%</td><td class="ex-note">Explosive triple extension. If clean technique is poor, use DB jump shrug instead.</td></tr>
+          <tr><td class="ex-name">Box Jump</td><td class="scheme">4×4</td><td class="ex-note">Max height box. Step down — don't jump down. Land soft with knees tracking toes.</td></tr>
+          <tr><td class="ex-name">Goblet Squat</td><td class="scheme">3×10</td><td class="ex-note">Heels down, chest up. Correction drill for squat pattern.</td></tr>
+          <tr><td class="ex-name">Single-Leg RDL</td><td class="scheme">3×8 each leg</td><td class="ex-note">Hinge at hip. Back flat. Hold one DB opposite to working leg.</td></tr>
+          <tr><td class="ex-name">Farmer Carry</td><td class="scheme">3×40 yards</td><td class="ex-note">Heavy DBs. Walk fast. Core + grip + posture.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+
+<!-- ============ DEFENSE ============ -->
+<div class="section" id="section-defense">
+  <div class="pos-badge defense">Defensemen</div>
+  <div class="section-title">Defense Program</div>
+  <p class="section-intro">Defenders need lateral footwork to mirror dodgers, physical strength to win body contact, and long-pole mechanics that don't compromise speed. Defense wins from the feet up.</p>
+
+  <div class="block defense-block open">
+    <div class="block-header" onclick="toggleBlock(this)">
+      <div>
+        <div class="block-title">Stick Skills — Defensive Mechanics</div>
+        <div class="block-meta">40 min / session · Daily · 2026 NFHS compliant</div>
+      </div>
+      <div class="block-toggle">▾</div>
+    </div>
+    <div class="block-body">
+      <div class="callout warn">
+        <strong>2026 NFHS Rule Updates — Defenders must know these:</strong>
+        <ul style="margin-top:8px; margin-bottom:0;">
+          <li><strong>Crease ban (Rules 4-18-4, 5-6-2):</strong> No defensive field player may enter their own crease with the perceived intent to block a shot or act as a goalkeeper. This is now a non-releasable personal foul. Drill proper positioning so defenders never have a reason to enter the crease — if they're in good position, they won't need to.</li>
+          <li><strong>Expanded holding (Rule 5-1):</strong> Holding now includes hooking, lifting, or pinning an opponent's body with the crosse. The lift check is still legal when targeting the opponent's stick — but the moment your crosse makes contact with their body in a pinning or hooking motion, that is now a personal foul. Drill the difference every session.</li>
+          <li><strong>Helmet loss = technical foul:</strong> If a player loses their helmet and continues to play, it is now an illegal procedure technical foul. Keep chin straps fitted and checked before every session.</li>
+        </ul>
+      </div>
+      <div class="callout">
+        <strong>Long pole, same fundamentals.</strong> Defensemen should do 300 reps of wall ball with the long pole daily. Most don't. The ones who do become your best defenders because their stick is never a liability.
+      </div>
+
+      <h4>Wall Ball — Long Pole (300 reps)</h4>
+      <div class="drill-grid">
+        <div class="drill-card">
+          <div class="drill-name">Strong-Hand Throws</div>
+          <div class="drill-detail">Same mechanics as a short-stick player. Wrist snap, elbow up. 10 yards from wall minimum to get realistic ball velocity.</div>
+          <div class="drill-tags"><span class="tag reps">100 reps</span></div>
+        </div>
+        <div class="drill-card">
+          <div class="drill-name">Weak-Hand Throws</div>
+          <div class="drill-detail">Defenders who can throw accurately off-hand are nearly impossible to pressure into turnovers on clears.</div>
+          <div class="drill-tags"><span class="tag reps">100 reps</span><span class="tag focus">Off hand</span></div>
+        </div>
+        <div class="drill-card">
+          <div class="drill-name">Quick Outlet Pass</div>
+          <div class="drill-detail">Receive from partner, one motion to the wall target. Simulates catching a goalie outlet and immediately throwing to a cutting midfielder.</div>
+          <div class="drill-tags"><span class="tag reps">100 reps</span><span class="tag hard">Game speed</span></div>
+        </div>
+      </div>
+
+      <hr class="divider">
+
+      <h4>Check Mechanics (Partner Required)</h4>
+      <div class="drill-grid">
+        <div class="drill-card">
+          <div class="drill-name">Poke Check Repetition</div>
+          <div class="drill-detail">Partner cradles at 5 yards. Defender fires poke check at top hand, resets stance immediately. Do NOT lunge. Stay balanced after each rep.</div>
+          <div class="drill-tags"><span class="tag sets">4 sets</span><span class="tag reps">10 reps each side</span></div>
+        </div>
+        <div class="drill-card">
+          <div class="drill-name">Lift Check Sequence</div>
+          <div class="drill-detail">Get underneath the opponent's bottom hand on the stick and lift upward to disrupt the cradle. Target is the stick — not the body. Under the 2026 expanded holding rule, if your crosse hooks, pins, or lifts the opponent's body, it is now a foul. Stay on the stick. Drill at 50% speed first, build to 80%.</div>
+          <div class="drill-tags"><span class="tag sets">3 sets</span><span class="tag reps">8 reps</span><span class="tag focus">Technique</span></div>
+        </div>
+        <div class="drill-card">
+          <div class="drill-name">Body Check / Seal</div>
+          <div class="drill-detail">Offensive player drives toward cage. Defender seals the hip with body position — NO cross-checking. Legal body-to-body positioning with feet active.</div>
+          <div class="drill-tags"><span class="tag sets">4 sets</span><span class="tag reps">6 reps</span><span class="tag focus">Footwork</span></div>
+        </div>
+        <div class="drill-card">
+          <div class="drill-name">Shadow Drill</div>
+          <div class="drill-detail">Offensive player has ball and dodges. Defender mirrors with active feet — slide, slide, pivot — no crossing feet. 8 seconds per rep. Offense tries to get to cage; D tries to push them east-west.</div>
+          <div class="drill-tags"><span class="tag sets">5 sets</span><span class="tag reps">8 sec each</span><span class="tag hard">Intensity</span></div>
+        </div>
+      </div>
+
+      <a class="video-ref" href="https://www.youtube.com/results?search_query=lacrosse+defenseman+footwork+check+drills" target="_blank">
+        <div class="video-icon">▶</div>
+        <div class="video-info">
+          <div class="video-title">Search: "Lacrosse Defenseman Footwork and Check Drills"</div>
+          <div class="video-channel">YouTube — Lacrosse Goalie Rat, MLL Film Room recommended</div>
+        </div>
+      </a>
+
+      <hr class="divider">
+
+      <h4>Clearing Drills</h4>
+      <div class="drill-grid">
+        <div class="drill-card">
+          <div class="drill-name">Outlet Pass to Midfield</div>
+          <div class="drill-detail">Goalie simulated outlet. D catches at GLE, immediately throws 15-yard outlet to a cutting midfielder. No hesitation — 1 catch, 1 throw.</div>
+          <div class="drill-tags"><span class="tag reps">10 reps each side</span></div>
+        </div>
+        <div class="drill-card">
+          <div class="drill-name">Carry and Throw Under Pressure</div>
+          <div class="drill-detail">Defender carries up the alley. A designated pressure player sticks a pole at them. D must protect and find an outlet within 3 seconds.</div>
+          <div class="drill-tags"><span class="tag sets">3 sets</span><span class="tag reps">5 reps</span><span class="tag hard">Pressure</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="block defense-block">
+    <div class="block-header" onclick="toggleBlock(this)">
+      <div>
+        <div class="block-title">Strength Program — Defensemen</div>
+        <div class="block-meta">3 days/week · Heavy lower body emphasis</div>
+      </div>
+      <div class="block-toggle">▾</div>
+    </div>
+    <div class="block-body">
+      <p>Defensemen take the most physical punishment. They need strength in their base, stability in single-leg positions, and neck/trap development for collision contact. Mass without mobility is a liability — train both.</p>
+
+      <h4>Day A — Lower Body Strength</h4>
+      <table class="workout-table">
+        <thead><tr><th>Exercise</th><th>Scheme</th><th>Notes</th></tr></thead>
+        <tbody>
+          <tr><td class="ex-name">Back Squat</td><td class="scheme">5×5 @75–85%</td><td class="ex-note">Full depth. Brace hard. Tempo: 3 seconds down, explode up.</td></tr>
+          <tr><td class="ex-name">Lateral Lunge</td><td class="scheme">3×8 each side</td><td class="ex-note">Deep lateral load. Builds the sliding pattern defenders use constantly.</td></tr>
+          <tr><td class="ex-name">Hip Thrust</td><td class="scheme">4×10</td><td class="ex-note">Bar across hips. Pause at top. Builds hip extension for driving through contact.</td></tr>
+          <tr><td class="ex-name">Calf Raise (single leg)</td><td class="scheme">3×15 each</td><td class="ex-note">Slow eccentric. Foot stability for lateral movement.</td></tr>
+          <tr><td class="ex-name">Prowler Push</td><td class="scheme">4×20 yards</td><td class="ex-note">If no prowler, use a sled or push a teammate. Low position, drive legs.</td></tr>
+        </tbody>
+      </table>
+
+      <h4>Day B — Upper Body + Collision Prep</h4>
+      <table class="workout-table">
+        <thead><tr><th>Exercise</th><th>Scheme</th><th>Notes</th></tr></thead>
+        <tbody>
+          <tr><td class="ex-name">Overhead Press</td><td class="scheme">4×6</td><td class="ex-note">Standing, strict. Builds shoulder stability for checking.</td></tr>
+          <tr><td class="ex-name">Barbell Row</td><td class="scheme">4×8</td><td class="ex-note">Overhand grip. Elbows tight. Pull to lower chest.</td></tr>
+          <tr><td class="ex-name">Shrug + Hold</td><td class="scheme">3×10 + 5s hold</td><td class="ex-note">Trap development for absorbing contact and neck protection.</td></tr>
+          <tr><td class="ex-name">Neck Bridge (Isometric)</td><td class="scheme">3×30s</td><td class="ex-note">On mat. Bodyweight neck strengthening. Non-negotiable for contact sports.</td></tr>
+          <tr><td class="ex-name">Ring Row or Pull-Up</td><td class="scheme">4×8–10</td><td class="ex-note">Trains pulling under load. Essential for poke check power.</td></tr>
+        </tbody>
+      </table>
+
+      <h4>Day C — Explosive Full Body</h4>
+      <table class="workout-table">
+        <thead><tr><th>Exercise</th><th>Scheme</th><th>Notes</th></tr></thead>
+        <tbody>
+          <tr><td class="ex-name">Hang Power Clean</td><td class="scheme">4×4</td><td class="ex-note">From hang position. Develops explosion from a loaded position — like driving through a block.</td></tr>
+          <tr><td class="ex-name">Lateral Bound</td><td class="scheme">4×5 each side</td><td class="ex-note">Max distance lateral jump, stick landing. Trains the exact movement of lateral slides.</td></tr>
+          <tr><td class="ex-name">Rotational Med Ball Slam</td><td class="scheme">4×6 each side</td><td class="ex-note">Rotate and slam down into the ground. Max velocity.</td></tr>
+          <tr><td class="ex-name">DB RDL</td><td class="scheme">3×10</td><td class="ex-note">Bilateral. Heavy. Full hamstring stretch at bottom.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+
+<!-- ============ MIDFIELD ============ -->
+<div class="section" id="section-midfield">
+  <div class="pos-badge midfield">Midfielders</div>
+  <div class="section-title">Midfield Program</div>
+  <p class="section-intro">Midfielders run the most on the field. They need to be conditioned to execute at full quality in the 4th quarter. Stick skills, two-way capability, and lacrosse fitness are equally weighted here.</p>
+
+  <div class="block midfield-block open">
+    <div class="block-header" onclick="toggleBlock(this)">
+      <div>
+        <div class="block-title">Stick Skills — Two-Way Development</div>
+        <div class="block-meta">45 min / session · Daily</div>
+      </div>
+      <div class="block-toggle">▾</div>
+    </div>
+    <div class="block-body">
+      <div class="callout">
+        <strong>Midfielders are never purely offensive or defensive.</strong> The drill sequence alternates between attack-style and defense-style reps so players develop both skill sets equally.
+      </div>
+
+      <h4>Wall Ball Sequence — 500 Reps</h4>
+      <div class="drill-grid">
+        <div class="drill-card">
+          <div class="drill-name">Strong Hand — 100 Reps</div>
+          <div class="drill-detail">Basic mechanics warm-up. Focus on off-hand positioning and weight transfer forward.</div>
+          <div class="drill-tags"><span class="tag reps">100 reps</span></div>
+        </div>
+        <div class="drill-card">
+          <div class="drill-name">Weak Hand — 100 Reps</div>
+          <div class="drill-detail">Midfielders transition from riding to clearing to attacking. All of that requires two strong hands.</div>
+          <div class="drill-tags"><span class="tag reps">100 reps</span><span class="tag focus">Critical</span></div>
+        </div>
+        <div class="drill-card">
+          <div class="drill-name">Catch-Move-Throw</div>
+          <div class="drill-detail">After each catch, take one lateral step or drop step before throwing. Never throw from a stationary position during this set.</div>
+          <div class="drill-tags"><span class="tag reps">150 reps</span><span class="tag focus">Footwork</span></div>
+        </div>
+        <div class="drill-card">
+          <div class="drill-name">High-Velocity Overhand</div>
+          <div class="drill-detail">Max-effort throws at a target 6 inches in diameter. Accuracy under power. Count misses. Goal: under 10% miss rate by Phase 3.</div>
+          <div class="drill-tags"><span class="tag reps">50 reps</span><span class="tag hard">Power</span></div>
+        </div>
+        <div class="drill-card">
+          <div class="drill-name">Backhand Pass</div>
+          <div class="drill-detail">Backhand delivery off the wall. Not a full-motion throw — a quick inside-out release used when a defender closes from the front.</div>
+          <div class="drill-tags"><span class="tag reps">50 reps</span><span class="tag focus">Situational</span></div>
+        </div>
+        <div class="drill-card">
+          <div class="drill-name">Catch Off-Balance</div>
+          <div class="drill-detail">Stand off-center from wall so ball doesn't come back direct. Must adjust and catch while moving. Mimics real-game passing lanes.</div>
+          <div class="drill-tags"><span class="tag reps">50 reps</span></div>
+        </div>
+      </div>
+
+      <a class="video-ref" href="https://www.youtube.com/results?search_query=lacrosse+midfielder+wall+ball+drills+two+way" target="_blank">
+        <div class="video-icon">▶</div>
+        <div class="video-info">
+          <div class="video-title">Search: "Lacrosse Midfielder Two-Way Stick Drills"</div>
+          <div class="video-channel">YouTube — LaxAllStars, PLL Film Sessions recommended</div>
+        </div>
+      </a>
+
+      <hr class="divider">
+
+      <h4>Field Skill Drills</h4>
+      <div class="drill-grid">
+        <div class="drill-card">
+          <div class="drill-name">3-Man Weave</div>
+          <div class="drill-detail">Classic 3-man weave full field. The rule: no player who throws the ball can be the one who scores. Finish on cage every rep. Builds passing angles and communication.</div>
+          <div class="drill-tags"><span class="tag sets">6 reps</span><span class="tag focus">Team</span></div>
+        </div>
+        <div class="drill-card">
+          <div class="drill-name">Rapid-Fire Shooting</div>
+          <div class="drill-detail">3 balls on the ground at each hash. Pick up, shoot on the run. No reset between shots. Simulates EMO or scramble scenarios.</div>
+          <div class="drill-tags"><span class="tag sets">3 sets</span><span class="tag reps">3 shots/set</span><span class="tag hard">Fast</span></div>
+        </div>
+        <div class="drill-card">
+          <div class="drill-name">Ground Ball Circuit</div>
+          <div class="drill-detail">Ball rolled 10 yards ahead. Player sprints, scoops, pivots, and outlets to a teammate immediately. Scoop must be clean — no stopping to pick up. Full extension on scoop.</div>
+          <div class="drill-tags"><span class="tag reps">10 reps each side</span><span class="tag focus">Fundamentals</span></div>
+        </div>
+        <div class="drill-card">
+          <div class="drill-name">Back-Check Sprint</div>
+          <div class="drill-detail">Attacker gets 2-step head start toward cage. Midfielder must sprint back, force the attacker wide, and prevent a quality shot. Builds two-way discipline.</div>
+          <div class="drill-tags"><span class="tag sets">4 sets</span><span class="tag reps">5 reps</span><span class="tag hard">Conditioning</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MIDFIELD CONDITIONING -->
+  <div class="block midfield-block">
+    <div class="block-header" onclick="toggleBlock(this)">
+      <div>
+        <div class="block-title">Lacrosse Conditioning — Midfielders</div>
+        <div class="block-meta">3 sessions/week · Built into Friday and Saturday sessions</div>
+      </div>
+      <div class="block-toggle">▾</div>
+    </div>
+    <div class="block-body">
+      <p>Midfielders run 5–7 miles per game at varying intensity. Aerobic base comes first (Phases 1–2). Anaerobic capacity and repeat-sprint ability build from there.</p>
+
+      <h4>Phase 1–2: Aerobic Base</h4>
+      <div class="drill-grid">
+        <div class="drill-card">
+          <div class="drill-name">Tempo Run — 20 min</div>
+          <div class="drill-detail">Run at 70% max heart rate for 20 continuous minutes. Conversational pace. Builds the aerobic base that supports high-intensity repeat sprints.</div>
+          <div class="drill-tags"><span class="tag time">20 min</span><span class="tag focus">Base</span></div>
+        </div>
+        <div class="drill-card">
+          <div class="drill-name">120s — 10×120 yards</div>
+          <div class="drill-detail">Classic lacrosse conditioning. Sprint 120 yards in under 18 seconds (varsity) / 20 seconds (JV). 60-second rest between. 10 total. Track weekly improvement.</div>
+          <div class="drill-tags"><span class="tag reps">10 reps</span><span class="tag time">60s rest</span><span class="tag hard">Key benchmark</span></div>
+        </div>
+      </div>
+
+      <h4>Phase 3–4: Anaerobic Capacity</h4>
+      <div class="drill-grid">
+        <div class="drill-card">
+          <div class="drill-name">Lactate Shuttles</div>
+          <div class="drill-detail">10-10-10 shuttle: sprint 10 yards, back, 20 yards, back, 30 yards, back. Rest 45 seconds. 8 rounds. Simulates transition play exactly.</div>
+          <div class="drill-tags"><span class="tag reps">8 rounds</span><span class="tag time">45s rest</span><span class="tag hard">Phase 3+</span></div>
+        </div>
+        <div class="drill-card">
+          <div class="drill-name">3-Min Work Blocks</div>
+          <div class="drill-detail">Full-field work for 3 minutes: catch, dodge, shoot, back-check, ground ball. No walking. Mirror a game-length shift. 90-second rest. 5 blocks total.</div>
+          <div class="drill-tags"><span class="tag time">3 min on / 90s off</span><span class="tag reps">5 blocks</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="block midfield-block">
+    <div class="block-header" onclick="toggleBlock(this)">
+      <div>
+        <div class="block-title">Strength Program — Midfielders</div>
+        <div class="block-meta">3 days/week · Power + Endurance emphasis</div>
+      </div>
+      <div class="block-toggle">▾</div>
+    </div>
+    <div class="block-body">
+      <p>Midfielders need strength they can use over the course of a 60-minute game. Heavy maximal lifts matter less than explosive lifts done with short rest periods.</p>
+
+      <h4>Full Weekly Lift (3 Days)</h4>
+      <table class="workout-table">
+        <thead><tr><th>Day</th><th>Exercise</th><th>Scheme</th></tr></thead>
+        <tbody>
+          <tr><td>Mon</td><td class="ex-name">Front Squat</td><td class="scheme">4×5</td></tr>
+          <tr><td></td><td class="ex-name">DB Romanian Deadlift</td><td class="scheme">3×10</td></tr>
+          <tr><td></td><td class="ex-name">Step-Up with Knee Drive</td><td class="scheme">3×8 each</td></tr>
+          <tr><td></td><td class="ex-name">Rotational Med Ball Throw</td><td class="scheme">4×5 each</td></tr>
+          <tr><td>Wed</td><td class="ex-name">Push Press</td><td class="scheme">4×5</td></tr>
+          <tr><td></td><td class="ex-name">Pendlay Row</td><td class="scheme">4×6</td></tr>
+          <tr><td></td><td class="ex-name">Landmine Press</td><td class="scheme">3×8 each</td></tr>
+          <tr><td></td><td class="ex-name">Ab Wheel Rollout</td><td class="scheme">3×8</td></tr>
+          <tr><td>Fri</td><td class="ex-name">Trap Bar Jump</td><td class="scheme">4×5 @40%</td></tr>
+          <tr><td></td><td class="ex-name">Lateral Bound + Stick</td><td class="scheme">4×4 each</td></tr>
+          <tr><td></td><td class="ex-name">Sled Sprint (20 yd)</td><td class="scheme">6×20 yd</td></tr>
+          <tr><td></td><td class="ex-name">Hang Clean</td><td class="scheme">4×3</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+
+<!-- ============ FACEOFF ============ -->
+<div class="section" id="section-faceoff">
+  <div class="pos-badge faceoff">Faceoff Specialists</div>
+  <div class="section-title">Faceoff Program</div>
+  <p class="section-intro">Faceoff is the only position in lacrosse that is entirely its own skill set. The methodology here draws from the Faceoff Academy (Greg Gurenlian) and Faceoff Factory frameworks: stance first, offensive moves second, counters third, exits fourth, and live reps every session. Winning 55%+ changes games. Getting to 65%+ wins championships.</p>
+
+  <!-- RULES CALLOUT -->
+  <div class="callout warn">
+    <strong>2026 NFHS Rule Update — Faceoff players:</strong> The motogrip (top hand palm-down, thumb toward head) is not a legal set position under NFHS rules. Do not drill it. Under Rule 4-3-3e, repeated adjustment by an official results in a delay-of-game penalty and possession awarded to the opponent. Get your set position right in practice so it is automatic on game day — there is no grace period at the whistle.
+  </div>
+
+  <!-- BLOCK 1: STANCE + SET -->
+  <div class="block faceoff-block open">
+    <div class="block-header" onclick="toggleBlock(this)">
+      <div>
+        <div class="block-title">Phase 1 — Stance &amp; Set Position</div>
+        <div class="block-meta">Master this before any move · 2026 NFHS legal · Daily</div>
+      </div>
+      <div class="block-toggle">▾</div>
+    </div>
+    <div class="block-body">
+      <div class="callout">
+        <strong>The Faceoff Academy system starts here.</strong> Greg Gurenlian teaches that stance is the foundation of every offensive move. A player with a dialed-in stance gets into their move faster and controls the ball with their body — not just their hands. Every other drill in this section is useless if the stance isn't right.
+      </div>
+
+      <h4>Legal Set Position — Coach Check List</h4>
+      <div class="drill-grid">
+        <div class="drill-card">
+          <div class="drill-name">Foot Position</div>
+          <div class="drill-detail">Feet slightly wider than shoulder width. Weight forward on the balls of the feet — not on the heels. Hips low. Front knee bent ~90°. You should be able to explode laterally or forward from this position without a loading step.</div>
+          <div class="drill-tags"><span class="tag focus">Foundation</span></div>
+        </div>
+        <div class="drill-card">
+          <div class="drill-name">Hand Position (Legal)</div>
+          <div class="drill-detail">Top hand: palm faces away, thumb up or neutral. Never palm-down — that's the motogrip and is illegal at NFHS level. Bottom hand: standard overhand grip, 8–10 inches below top hand. Both hands on the shaft only. Stick flat on the ground, head even with the center line.</div>
+          <div class="drill-tags"><span class="tag focus">Rules compliance</span><span class="tag hard">Checked every rep</span></div>
+        </div>
+        <div class="drill-card">
+          <div class="drill-name">Body Angle</div>
+          <div class="drill-detail">Torso leans forward, over the stick. Head up, eyes on the ball and your opponent's hands simultaneously. Shoulders square to the midfield line — not angled. Weight is loaded toward the ball side.</div>
+          <div class="drill-tags"><span class="tag focus">Leverage</span></div>
+        </div>
+        <div class="drill-card">
+          <div class="drill-name">Stance Hold Drill</div>
+          <div class="drill-detail">Get into perfect set position. Hold for 10 seconds. Coach adjusts any fault: heel weight, raised hips, collapsed top hand, stick off the ground. 10 reps. The goal is a position that feels identical every single time — muscle memory before movement.</div>
+          <div class="drill-tags"><span class="tag reps">10 holds × 10s</span><span class="tag time">Daily</span></div>
+        </div>
+      </div>
+
+      <a class="video-ref" href="https://www.youtube.com/results?search_query=Greg+Gurenlian+faceoff+stance+hand+movements+academy" target="_blank">
+        <div class="video-icon">▶</div>
+        <div class="video-info">
+          <div class="video-title">Search: "Greg Gurenlian Faceoff Hand Movements Stance"</div>
+          <div class="video-channel">YouTube — GregGurenlian (FOA Beast Lab), Coaches Insider recommended</div>
+        </div>
+      </a>
+    </div>
+  </div>
+
+  <!-- BLOCK 2: THREE OFFENSIVE MOVES (FOA System) -->
+  <div class="block faceoff-block open">
+    <div class="block-header" onclick="toggleBlock(this)">
+      <div>
+        <div class="block-title">Phase 2 — The Three Offensive Moves</div>
+        <div class="block-meta">FOA System: Quick Clamp · Power Clamp · Plunger · Master one before adding the next</div>
+      </div>
+      <div class="block-toggle">▾</div>
+    </div>
+    <div class="block-body">
+      <div class="callout">
+        <strong>Gurenlian's framework:</strong> There are three offensive faceoff movements — Quick Clamp, Power Clamp, and Plunger. The right-hand movement is the same on all three: drive the ball stop directly into the ball. What changes is the angle, timing, and exit. A player who owns all three keeps defenders guessing. A player who only owns one gets scouted and stopped.
+      </div>
+
+      <h4>The Three Moves</h4>
+      <div class="drill-grid">
+        <div class="drill-card">
+          <div class="drill-name">Quick Clamp</div>
+          <div class="drill-detail">Pure hand speed, no body commitment. Drive the ball stop down onto the ball the instant the whistle fires. Wrists snap fast and hard. Body follows — don't lead with your body or you telegraph the move. This is your primary weapon and your fastest option. Reps: get to where the motion happens before you consciously think.</div>
+          <div class="drill-tags"><span class="tag reps">30 solo reps</span><span class="tag sets">3 sets</span><span class="tag focus">Primary weapon</span></div>
+        </div>
+        <div class="drill-card">
+          <div class="drill-name">Power Clamp</div>
+          <div class="drill-detail">Same clamp action but with full hip and body engagement. You commit your weight forward and through the ball. Slower to initiate than the quick clamp, but far harder to counter once locked. Used against bigger or faster opponents to win with leverage instead of reaction time. Hips drive — not just wrists.</div>
+          <div class="drill-tags"><span class="tag reps">20 reps</span><span class="tag focus">Leverage dominant</span></div>
+        </div>
+        <div class="drill-card">
+          <div class="drill-name">Plunger</div>
+          <div class="drill-detail">Instead of clamping across the ball, drive the stick head straight down on top of the opponent's stick with force — a spring-like plunging action that pops the ball loose forward. Highly effective against players who go low and flat with their clamp. The ball pops out in front; you're already moving to it. Requires strong wrists and a flexible head.</div>
+          <div class="drill-tags"><span class="tag reps">20 reps</span><span class="tag hard">Advanced</span><span class="tag focus">Pop move</span></div>
+        </div>
+      </div>
+
+      <h4>Solo Drilling Protocol (FOA Method)</h4>
+      <div class="drill-grid">
+        <div class="drill-card">
+          <div class="drill-name">Quick Chops — 10 Seconds</div>
+          <div class="drill-detail">In set position over the ball. Go back and forth over the ball as fast as possible without touching it for 10 seconds. This is a pure hand-speed warm-up. Count contacts per 10 seconds; track and try to beat weekly.</div>
+          <div class="drill-tags"><span class="tag reps">6 × 10s</span><span class="tag time">30s rest</span><span class="tag focus">Hand speed</span></div>
+        </div>
+        <div class="drill-card">
+          <div class="drill-name">Horizontal Rapid Fire</div>
+          <div class="drill-detail">Set up 8–10 balls across the midfield line with just enough space between them to get set. Start at one end. On the alarm or whistle: clamp the first ball, toss it out forward or backward, get to the next ball, repeat. Full speed down the line. Builds transition speed and move automation.</div>
+          <div class="drill-tags"><span class="tag reps">3 runs per direction</span><span class="tag hard">Conditioning</span></div>
+        </div>
+        <div class="drill-card">
+          <div class="drill-name">Fast Hands Reflex</div>
+          <div class="drill-detail">Place a ball 3 inches from your bare hand. Set alarm for every 6 seconds. When it goes off, grab the ball as fast as possible — no stick. Trains the reflex pattern that firing your clamp relies on. Simple, requires no equipment, can be done anywhere.</div>
+          <div class="drill-tags"><span class="tag reps">20 grabs</span><span class="tag focus">Reflex</span></div>
+        </div>
+        <div class="drill-card">
+          <div class="drill-name">Resisted Clamp (Band)</div>
+          <div class="drill-detail">Anchor a light resistance band to a fence. Loop around the throat of the stick below the head. Get in set position and clamp hard against the tension. Focus on a violent snap motion — same muscles, more resistance. After clamp, work exits against the band tension from different angles. Builds clamp power and exit strength simultaneously.</div>
+          <div class="drill-tags"><span class="tag sets">4 sets</span><span class="tag reps">10 reps</span><span class="tag focus">Strength</span></div>
+        </div>
+      </div>
+
+      <a class="video-ref" href="https://www.youtube.com/results?search_query=lacrosse+faceoff+plunger+move+technique" target="_blank">
+        <div class="video-icon">▶</div>
+        <div class="video-info">
+          <div class="video-title">Search: "Lacrosse Faceoff Plunger Move Greg Gurenlian"</div>
+          <div class="video-channel">YouTube — GregGurenlian, LaxAllStars recommended</div>
+        </div>
+      </a>
+    </div>
+  </div>
+
+  <!-- BLOCK 3: COUNTERS + DEFENSIVE MOVES -->
+  <div class="block faceoff-block">
+    <div class="block-header" onclick="toggleBlock(this)">
+      <div>
+        <div class="block-title">Phase 3 — Counters &amp; Defensive Moves</div>
+        <div class="block-meta">Only add after offensive moves are automatic · Jam · Rake · Counter Clamp</div>
+      </div>
+      <div class="block-toggle">▾</div>
+    </div>
+    <div class="block-body">
+      <div class="callout">
+        A predictable FOGO gets scouted by the third faceoff. Counters are what separate a high school player who wins sometimes from one who wins consistently. Per the FOA approach: go into every faceoff assuming you might lose the initial move. Counters trained at game speed turn a clean loss into a 50/50.
+      </div>
+
+      <h4>Counter Moves</h4>
+      <div class="drill-grid">
+        <div class="drill-card">
+          <div class="drill-name">Rake</div>
+          <div class="drill-detail">When the opponent wins the clamp, don't fight it — pull your head across and drag the ball out sideways toward your body. Low wrists, quick lateral pull, immediate body shift to protect. Your rake beats their clamp when executed clean. Drill it as a counter specifically: let your partner win the clamp every rep, then rake.</div>
+          <div class="drill-tags"><span class="tag reps">20 reps</span><span class="tag focus">Counter to clamp</span></div>
+        </div>
+        <div class="drill-card">
+          <div class="drill-name">The Jam</div>
+          <div class="drill-detail">Drive your stick head directly into your opponent's stick as they try to pull the ball out — stopping their exit cold. Forces a contested ball. Used when you know you're slower to the clamp. Keep center of gravity low, use body weight into the jam. A well-executed jam beats a fast sloppy clamp win every time.</div>
+          <div class="drill-tags"><span class="tag reps">20 reps</span><span class="tag focus">Disrupt exit</span></div>
+        </div>
+        <div class="drill-card">
+          <div class="drill-name">Jam + Counter Clamp</div>
+          <div class="drill-detail">You jam their clamp attempt, then immediately re-clamp over the top of both sticks. The timing window is narrow — the jam must land at the same moment they try to pull. Body and hip drive determines who wins. No illegal grip change required.</div>
+          <div class="drill-tags"><span class="tag reps">15 reps</span><span class="tag hard">Advanced</span></div>
+        </div>
+        <div class="drill-card">
+          <div class="drill-name">Shovel Counter</div>
+          <div class="drill-detail">When the ball pops loose between both sticks, shovel it sideways or backward to your wing before either player can fully control it. Uses a quick wrist scoop motion, one hand if needed. Best executed when you read a contested or popped ball early — don't wait to see where it goes.</div>
+          <div class="drill-tags"><span class="tag reps">15 reps</span><span class="tag focus">Wing play</span></div>
+        </div>
+        <div class="drill-card">
+          <div class="drill-name">Read + React Drill</div>
+          <div class="drill-detail">Partner intentionally wins the clamp every rep. Your job: read their exit direction and fire the correct counter — rake left, rake right, jam, or shovel. Partner calls the move silently with hand signal after the whistle; you must react to what you see, not what you expected. Trains anticipation, not just mechanics.</div>
+          <div class="drill-tags"><span class="tag reps">20 reps</span><span class="tag hard">Game realism</span></div>
+        </div>
+        <div class="drill-card">
+          <div class="drill-name">Opponent Tendencies Scouting</div>
+          <div class="drill-detail">Before every game, coach provides a short report: does their FOGO clamp quick or power? Rake left or right? Push through or go to wing? Player adjusts their primary counter accordingly. This is not optional — FOA teaches that reading your opponent's body language and set position before the whistle is as important as the move itself.</div>
+          <div class="drill-tags"><span class="tag focus">Film/Scout</span><span class="tag hard">Mental game</span></div>
+        </div>
+      </div>
+
+      <a class="video-ref" href="https://www.youtube.com/results?search_query=lacrosse+faceoff+jam+rake+counter+drill+advanced" target="_blank">
+        <div class="video-icon">▶</div>
+        <div class="video-info">
+          <div class="video-title">Search: "Lacrosse Faceoff Jam Rake Counter Techniques"</div>
+          <div class="video-channel">YouTube — Faceoff Academy, Signature Lacrosse recommended</div>
+        </div>
+      </a>
+    </div>
+  </div>
+
+  <!-- BLOCK 4: EXITS + WING PLAY -->
+  <div class="block faceoff-block">
+    <div class="block-header" onclick="toggleBlock(this)">
+      <div>
+        <div class="block-title">Phase 4 — Exits &amp; Wing Coordination</div>
+        <div class="block-meta">Win the draw, then keep possession · FOGO + wings drill together</div>
+      </div>
+      <div class="block-toggle">▾</div>
+    </div>
+    <div class="block-body">
+      <div class="callout">
+        Winning the faceoff is only half the job. Per Air Force coach Will Corrigan and FOA methodology: wings must know all three basic moves (clamp, rake, shovel) and their positioning responsibilities for each one. FOGO and wings must be on the same page before every draw. A FOGO who wins 65% but only converts 70% of those into possession is no different from one winning 45%.
+      </div>
+
+      <h4>Exit Drills — FOGO Solo</h4>
+      <div class="drill-grid">
+        <div class="drill-card">
+          <div class="drill-name">Clamp + Wing Outlet</div>
+          <div class="drill-detail">Clamp the ball, secure with body, immediately throw one-hand outlet to the near wing. Wing player must be moving — they do not stand still and wait. Outlet lands ahead of the wing in stride. 10 reps each side. Time from whistle to wing catch: target under 1.5 seconds.</div>
+          <div class="drill-tags"><span class="tag reps">10 reps each side</span><span class="tag focus">Primary exit</span></div>
+        </div>
+        <div class="drill-card">
+          <div class="drill-name">Clamp + Push Through</div>
+          <div class="drill-detail">After clamp, instead of going to wing — push ball through X and burst forward yourself. Requires full hip drive. The FOGO becomes a ball-carrier in transition. Best when both wing defenders collapse on the wings. Drill it specifically against a scenario where both wings are covered.</div>
+          <div class="drill-tags"><span class="tag reps">10 reps</span><span class="tag focus">Run-it-yourself</span></div>
+        </div>
+        <div class="drill-card">
+          <div class="drill-name">Rake + Back Wing Outlet</div>
+          <div class="drill-detail">After a rake, ball is usually behind the FOGO. Body turn is critical — pivot over the ball, shield with your back, throw back-wing outlet or carry through. Drill the pivot specifically: slow it down until the footwork is clean, then build to speed.</div>
+          <div class="drill-tags"><span class="tag reps">10 reps</span><span class="tag focus">Rake exit</span></div>
+        </div>
+        <div class="drill-card">
+          <div class="drill-name">Scoop-Turn-Clear</div>
+          <div class="drill-detail">Ball at feet after a contested draw. Scoop, pivot 180°, outlet immediately. No stopping — one flowing motion. The 50/50 scoop into a clean clear is a game-changing play. Drill it until it's as automatic as any faceoff move.</div>
+          <div class="drill-tags"><span class="tag reps">10 reps each side</span></div>
+        </div>
+      </div>
+
+      <h4>Wing Alignment by Move</h4>
+      <div class="drill-grid">
+        <div class="drill-card">
+          <div class="drill-name">Clamp → Wing Left</div>
+          <div class="drill-detail">Left wing is the primary outlet. Right wing holds their lane as a secondary option and crash lane if left wing is covered. Wings do not run until the ball is clamped — premature movement telegraphs the exit and allows the opposing wing to cut the outlet off.</div>
+          <div class="drill-tags"><span class="tag focus">Team drill</span></div>
+        </div>
+        <div class="drill-card">
+          <div class="drill-name">Rake → Back Wing</div>
+          <div class="drill-detail">After a rake, ball typically goes back toward the defensive side. The back wing must crash to the trail ball immediately. The front wing drops into a defensive support position. This swap happens on instinct — drill it so both wings react to the rake automatically.</div>
+          <div class="drill-tags"><span class="tag focus">Team drill</span></div>
+        </div>
+        <div class="drill-card">
+          <div class="drill-name">Shovel → Trail Ball</div>
+          <div class="drill-detail">After a shovel, ball goes sideways. Both wings crash the ball hard. First wing there scoops and immediately looks upfield. Second wing provides an immediate outlet option. Speed to the ball wins this scenario — not technique.</div>
+          <div class="drill-tags"><span class="tag focus">Team drill</span></div>
+        </div>
+      </div>
+
+      <a class="video-ref" href="https://www.youtube.com/results?search_query=lacrosse+faceoff+wing+play+strategy+exits+clamp+rake" target="_blank">
+        <div class="video-icon">▶</div>
+        <div class="video-info">
+          <div class="video-title">Search: "Lacrosse Faceoff Wing Strategies Clamp Rake Shovel"</div>
+          <div class="video-channel">YouTube — Will Corrigan USAFA, IMLCA Video Library recommended</div>
+        </div>
+      </a>
+    </div>
+  </div>
+
+  <!-- BLOCK 5: REACTION + LIVE REPS -->
+  <div class="block faceoff-block">
+    <div class="block-header" onclick="toggleBlock(this)">
+      <div>
+        <div class="block-title">Phase 5 — Reaction Training &amp; Live Reps</div>
+        <div class="block-meta">Randomized cadence · Tournament mode · Track win % weekly</div>
+      </div>
+      <div class="block-toggle">▾</div>
+    </div>
+    <div class="block-body">
+      <div class="callout">
+        FOA's draw day structure — used in their weekly training — runs players through live reps with randomized cadences and tournament mode for in-game pressure. The goal is not just to get reps but to harden the player mentally. A player who only practices with predictable whistles will freeze or false-start in games.
+      </div>
+
+      <h4>Reaction Protocols</h4>
+      <div class="drill-grid">
+        <div class="drill-card">
+          <div class="drill-name">Randomized Cadence Whistle</div>
+          <div class="drill-detail">Coach blows whistle with no predictable timing — vary the pause between "set" and the whistle from 0.5 to 4 seconds. Player cannot anticipate. Must react only to the sound. Call the move before set: "Quick clamp left." Track false starts separately from missed whistle. Goal: zero false starts by Phase 3.</div>
+          <div class="drill-tags"><span class="tag reps">30 reps</span><span class="tag time">Randomized</span><span class="tag focus">Reaction</span></div>
+        </div>
+        <div class="drill-card">
+          <div class="drill-name">Visual Ref Read</div>
+          <div class="drill-detail">Coach simulates ref arm motion — the wrist drop before the whistle is the real cue elite FOGOs read. Player reacts to the visual cue. Alternated with audio-only reps so the player trains both separately. At game speed, the visual cue fires 0.1–0.2 seconds before the sound reaches the player.</div>
+          <div class="drill-tags"><span class="tag reps">20 reps</span><span class="tag focus">Advanced reaction</span></div>
+        </div>
+        <div class="drill-card">
+          <div class="drill-name">Live 1v1 — Full Sequence</div>
+          <div class="drill-detail">Full faceoff: set, whistle, move, counter, ground ball, outlet. Loser rides. One player wins possession and they clear it. This is the unit — not just the draw. The entire sequence must be trained together. Minimum 20 live reps per session.</div>
+          <div class="drill-tags"><span class="tag reps">20+ reps</span><span class="tag hard">Game speed</span></div>
+        </div>
+        <div class="drill-card">
+          <div class="drill-name">Tournament Mode</div>
+          <div class="drill-detail">Run a bracket: 4 FOGOs compete, track wins, losers are eliminated. Winner gets 2 minutes of rest, then faces the next challenger. Simulates the game pressure of consecutive faceoffs against different opponents. Run this at the end of every Wednesday stick session.</div>
+          <div class="drill-tags"><span class="tag time">15 min block</span><span class="tag hard">Pressure</span></div>
+        </div>
+        <div class="drill-card">
+          <div class="drill-name">Win % Tracking</div>
+          <div class="drill-detail">Record every live rep result. Calculate weekly win percentage. Post it. Phase 1 target: 50%+. Phase 2 target: 55%+. Phase 3 target: 60%+. Phase 4 target: maintain 60%+ while adjusting to opponent counters. This is not optional data — it's how you measure development.</div>
+          <div class="drill-tags"><span class="tag focus">Metrics</span></div>
+        </div>
+        <div class="drill-card">
+          <div class="drill-name">Film Review Session</div>
+          <div class="drill-detail">Once per week (Wednesday), review recorded reps from the previous session. Check set position, hand legality, timing of move, exit decision. FOA records and shares video with players — do the same with your phone if you don't have dedicated film. 10 minutes of self-review per week accelerates development faster than 30 extra reps.</div>
+          <div class="drill-tags"><span class="tag focus">Film review</span><span class="tag time">10 min/week</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- BLOCK 6: POST-FACEOFF GROUND BALLS -->
+  <div class="block faceoff-block">
+    <div class="block-header" onclick="toggleBlock(this)">
+      <div>
+        <div class="block-title">Post-Draw Ground Ball Sequence</div>
+        <div class="block-meta">Win the draw, then win the 50/50 — both must be trained</div>
+      </div>
+      <div class="block-toggle">▾</div>
+    </div>
+    <div class="block-body">
+      <div class="callout">
+        A FOGO who wins 65% of draws but only converts 70% into clean possession is leaving 20% of their production on the field. Post-draw ground ball work is the second half of the position. Drill it every session.
+      </div>
+      <div class="drill-grid">
+        <div class="drill-card">
+          <div class="drill-name">Good GB Warm-Up — Forward</div>
+          <div class="drill-detail">Set up at midfield. Do a series of ground balls forward, simulating a won faceoff scoop. Scoop, look upfield, outlet. Then a set of ground balls won backward — scoop behind you, pivot, clear. This is the standard FOA warm-up before any live rep session.</div>
+          <div class="drill-tags"><span class="tag reps">10 each direction</span><span class="tag focus">Warm-up</span></div>
+        </div>
+        <div class="drill-card">
+          <div class="drill-name">2-Man Contested Ground Ball</div>
+          <div class="drill-detail">Ball placed 3 yards ahead of two players. Both sprint. Only one wins. Loser must ride. Alternate winner. Builds physicality on the 50/50 — the situation you're in after every tight draw.</div>
+          <div class="drill-tags"><span class="tag reps">10 reps</span><span class="tag hard">Physical</span></div>
+        </div>
+        <div class="drill-card">
+          <div class="drill-name">Scoop-Turn-Clear</div>
+          <div class="drill-detail">Ball at FOGO's feet. Scoop, 180° pivot, immediate outlet throw. No stopping. One continuous motion from ground to clearing pass. Time the outlet to the wing player moving into their lane.</div>
+          <div class="drill-tags"><span class="tag reps">10 reps each pivot</span></div>
+        </div>
+        <div class="drill-card">
+          <div class="drill-name">Pressure Ground Ball</div>
+          <div class="drill-detail">Ball rolls free. FOGO chases. An opposing midfielder applies immediate body pressure from behind. FOGO must scoop under pressure, protect with body, and outlet without stopping. No fouls — legal body position only. Simulates real game pressure from the opposing team crashing X.</div>
+          <div class="drill-tags"><span class="tag reps">8 reps</span><span class="tag hard">Game realism</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- BLOCK 7: STRENGTH -->
+  <div class="block faceoff-block">
+    <div class="block-header" onclick="toggleBlock(this)">
+      <div>
+        <div class="block-title">Strength Program — Faceoff Specialists</div>
+        <div class="block-meta">3 days/week · Grip · Wrist torque · Hip explosion</div>
+      </div>
+      <div class="block-toggle">▾</div>
+    </div>
+    <div class="block-body">
+      <p>Faceoff strength is specific. Grip, forearm, and wrist strength determine clamp power and exit control. Hip strength and explosion determine ball protection and post-draw movement. This program is purpose-built for the position — not a general lifting template.</p>
+
+      <h4>Primary Lifts</h4>
+      <table class="workout-table">
+        <thead><tr><th>Exercise</th><th>Scheme</th><th>Why</th></tr></thead>
+        <tbody>
+          <tr><td class="ex-name">Thick Bar Deadlift (or Fat Gripz)</td><td class="scheme">4×4</td><td class="ex-note">Grip and pulling strength built together. The single best grip developer available.</td></tr>
+          <tr><td class="ex-name">Wrist Roller — Both Directions</td><td class="scheme">4 × full up + down</td><td class="ex-note">Forearm endurance for repeated faceoff reps late in game 4. Non-negotiable for FOGOs.</td></tr>
+          <tr><td class="ex-name">Resisted Wrist Curl (both ways)</td><td class="scheme">3×15 each way</td><td class="ex-note">Flexion and extension. The clamp uses both planes. Train both.</td></tr>
+          <tr><td class="ex-name">Low Cable Rotation (floor level)</td><td class="scheme">4×10 each side</td><td class="ex-note">Rotational torque in the same plane as the clamp and rake. Cable at ground level — not waist.</td></tr>
+          <tr><td class="ex-name">Hip Thrust</td><td class="scheme">4×8</td><td class="ex-note">Hip extension drives through the ball and protects possession after the clamp. Heavy.</td></tr>
+          <tr><td class="ex-name">Explosive Med Ball Slam</td><td class="scheme">4×5</td><td class="ex-note">Full body, downward explosion. The movement pattern mirrors the power clamp exactly.</td></tr>
+          <tr><td class="ex-name">Dead Hang</td><td class="scheme">3 × max time</td><td class="ex-note">Grip endurance. Record your time every week. Compete against yourself.</td></tr>
+          <tr><td class="ex-name">Lateral Bound + Stick Landing</td><td class="scheme">4×4 each</td><td class="ex-note">Explosive lateral movement from X after a clamp win. Landing stability matters.</td></tr>
+          <tr><td class="ex-name">Single-Leg Broad Jump</td><td class="scheme">3×4 each</td><td class="ex-note">Drive off one leg — the same position used when pushing through after a clean clamp.</td></tr>
+          <tr><td class="ex-name">Copenhagen Plank</td><td class="scheme">3×30s each</td><td class="ex-note">Groin/adductor stability. Protects against injury from the wide faceoff stance under load.</td></tr>
+        </tbody>
+      </table>
+
+      <h4>Hand Speed Finisher (End of Every Session)</h4>
+      <div class="drill-grid">
+        <div class="drill-card">
+          <div class="drill-name">Fingertip Push-Ups</div>
+          <div class="drill-detail">3×10. Builds the specific finger and palm strength needed for grip under fatigue. Start on knees if full reps are not possible — do not sacrifice form.</div>
+          <div class="drill-tags"><span class="tag sets">3×10</span></div>
+        </div>
+        <div class="drill-card">
+          <div class="drill-name">Rice Bucket (or Sand)</div>
+          <div class="drill-detail">Plunge hands into a bucket of rice or sand, open and close fists, rotate wrists, spread fingers. 3 minutes continuous. Builds the small-muscle forearm endurance that wrist rollers miss.</div>
+          <div class="drill-tags"><span class="tag time">3 min</span><span class="tag focus">Forearm</span></div>
+        </div>
+        <div class="drill-card">
+          <div class="drill-name">Grip Crush + Hold</div>
+          <div class="drill-detail">Squeeze a lacrosse ball as hard as possible for 5 seconds. Release fully for 5 seconds. 10 rounds each hand. Builds the grip endurance needed to hold a hard clamp for the full duration of a ground ball fight.</div>
+          <div class="drill-tags"><span class="tag reps">10 rounds each hand</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ============ SPEED ============ -->
+<div class="section" id="section-speed">
+  <div class="pos-badge speed">Speed &amp; Agility</div>
+  <div class="section-title">Speed Program</div>
+  <p class="section-intro">Two sessions per week for all positions. Tuesday is acceleration and agility. Friday is top-end speed and change-of-direction. All players follow the same program — intensity and distance scale by JV/varsity.</p>
+
+  <div class="block speed-block open">
+    <div class="block-header" onclick="toggleBlock(this)">
+      <div>
+        <div class="block-title">Tuesday — Acceleration + Agility</div>
+        <div class="block-meta">45 min · All positions</div>
+      </div>
+      <div class="block-toggle">▾</div>
+    </div>
+    <div class="block-body">
+
+      <h4>Warm-Up (10 min — every session)</h4>
+      <ul>
+        <li><strong>A-Skip</strong> — 2×20 yards. High knees, arms drive opposite leg.</li>
+        <li><strong>B-Skip</strong> — 2×20 yards. Extends A-skip with a leg extension cycle.</li>
+        <li><strong>Carioca</strong> — 2×20 yards each direction. Hips loose, arms relaxed.</li>
+        <li><strong>High Knee Runs</strong> — 2×20 yards. Fast, short stride, forward lean.</li>
+        <li><strong>Butt Kick</strong> — 2×20 yards. Heel to glute, not heel to hamstring.</li>
+        <li><strong>Hip Circle + Lateral Lunge</strong> — 10 reps each, bodyweight.</li>
+      </ul>
+
+      <hr class="divider">
+
+      <h4>Agility Ladder Sequence (15 min)</h4>
+      <div class="drill-grid">
+        <div class="drill-card">
+          <div class="drill-name">Two In, Two Out</div>
+          <div class="drill-detail">Both feet in each rung, both feet out, move forward. Arms pump. Stay on balls of feet. Speed increases each rep.</div>
+          <div class="drill-tags"><span class="tag reps">4 runs</span><span class="tag time">30s rest</span></div>
+        </div>
+        <div class="drill-card">
+          <div class="drill-name">Lateral In-In-Out-Out</div>
+          <div class="drill-detail">Enter each rung laterally, lead foot first. Move sideways the length of the ladder. 2 runs each direction.</div>
+          <div class="drill-tags"><span class="tag reps">4 runs</span><span class="tag focus">Lateral</span></div>
+        </div>
+        <div class="drill-card">
+          <div class="drill-name">Ickey Shuffle</div>
+          <div class="drill-detail">Classic 3-step shuffle. In-in-out alternating sides. Tests hip mobility and footwork coordination. Go slow until the pattern is clean.</div>
+          <div class="drill-tags"><span class="tag reps">4 runs</span></div>
+        </div>
+        <div class="drill-card">
+          <div class="drill-name">Single-Foot Hops</div>
+          <div class="drill-detail">Each rung: one foot only. Alternate left/right per run. Builds single-leg stability and foot speed.</div>
+          <div class="drill-tags"><span class="tag reps">4 runs each foot</span></div>
+        </div>
+      </div>
+
+      <a class="video-ref" href="https://www.youtube.com/results?search_query=agility+ladder+drills+lacrosse+speed+training" target="_blank">
+        <div class="video-icon">▶</div>
+        <div class="video-info">
+          <div class="video-title">Search: "Agility Ladder Drills for Lacrosse Speed"</div>
+          <div class="video-channel">YouTube — FloSports Lacrosse, NFHS recommended</div>
+        </div>
+      </a>
+
+      <hr class="divider">
+
+      <h4>Cone Patterns — Change of Direction (20 min)</h4>
+      <div class="drill-grid">
+        <div class="drill-card">
+          <div class="drill-name">5-10-5 Shuttle</div>
+          <div class="drill-detail">Start center. Sprint 5 yards right, touch line. Sprint 10 yards left, touch line. Sprint 5 yards back to center. Varsity target: under 4.5s. JV: under 5.0s.</div>
+          <div class="drill-tags"><span class="tag reps">6 reps</span><span class="tag time">90s rest</span><span class="tag hard">Timed</span></div>
+        </div>
+        <div class="drill-card">
+          <div class="drill-name">L-Drill (3-Cone)</div>
+          <div class="drill-detail">3 cones in an L, 5 yards apart. Sprint to cone 2, back to 1. Sprint to cone 2, around the outside, back around cone 3, through the L. Timed every session.</div>
+          <div class="drill-tags"><span class="tag reps">4 reps each way</span><span class="tag time">90s rest</span></div>
+        </div>
+        <div class="drill-card">
+          <div class="drill-name">T-Drill</div>
+          <div class="drill-detail">Sprint 10 yards to center cone. Shuffle 5 yards left. Shuffle 10 yards right. Shuffle back 5 yards left. Backpedal to start. Never cross feet on the shuffles.</div>
+          <div class="drill-tags"><span class="tag reps">4 reps</span><span class="tag time">90s rest</span></div>
+        </div>
+        <div class="drill-card">
+          <div class="drill-name">Reactive Cone Sprint</div>
+          <div class="drill-detail">4 cones around a player. Coach points — player sprints to that cone and back. Randomized. 6 cues per set. Builds reactive quickness, not just mechanical speed.</div>
+          <div class="drill-tags"><span class="tag sets">4 sets</span><span class="tag reps">6 cues each</span><span class="tag focus">Reaction</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="block speed-block">
+    <div class="block-header" onclick="toggleBlock(this)">
+      <div>
+        <div class="block-title">Friday — Top-End Speed + Sprints</div>
+        <div class="block-meta">45 min · All positions</div>
+      </div>
+      <div class="block-toggle">▾</div>
+    </div>
+    <div class="block-body">
+
+      <h4>Acceleration Work (15 min)</h4>
+      <div class="drill-grid">
+        <div class="drill-card">
+          <div class="drill-name">3-Point Start — 10 yd Sprints</div>
+          <div class="drill-detail">One hand down, feet staggered. Drive out of start at 45°. First 3 steps determine the whole rep. Do not stand up early.</div>
+          <div class="drill-tags"><span class="tag reps">6×10 yards</span><span class="tag time">60s rest</span></div>
+        </div>
+        <div class="drill-card">
+          <div class="drill-name">Falling Start — 20 yd</div>
+          <div class="drill-detail">Stand tall, lean forward until gravity forces the first step. Don't take a prep step — just fall and go. Best drill for pure acceleration development.</div>
+          <div class="drill-tags"><span class="tag reps">6×20 yards</span><span class="tag time">60s rest</span></div>
+        </div>
+        <div class="drill-card">
+          <div class="drill-name">Wall Drive — 5 sec</div>
+          <div class="drill-detail">Hands on wall, lean at 45°. Drive knees up alternately as fast as possible. 5 seconds, max effort. Coach counts contacts. Goal: 20+ contacts per 5s.</div>
+          <div class="drill-tags"><span class="tag reps">6×5 sec</span><span class="tag time">30s rest</span></div>
+        </div>
+      </div>
+
+      <hr class="divider">
+
+      <h4>Max Velocity Sprints (15 min)</h4>
+      <div class="drill-grid">
+        <div class="drill-card">
+          <div class="drill-name">40-Yard Dash</div>
+          <div class="drill-detail">Sprint all 40 yards. Time every player every week. Track improvement across the off-season. Target improvements: 0.2–0.3s faster by Week 16 for most players.</div>
+          <div class="drill-tags"><span class="tag reps">4 reps</span><span class="tag time">3 min rest</span><span class="tag hard">Timed</span></div>
+        </div>
+        <div class="drill-card">
+          <div class="drill-name">Flying 20s</div>
+          <div class="drill-detail">Build speed for 20 yards, then sprint max effort for the next 20 yards. The build-up removes the acceleration phase — tests pure top-end speed only.</div>
+          <div class="drill-tags"><span class="tag reps">4×20 yards fly</span><span class="tag time">3 min rest</span></div>
+        </div>
+      </div>
+
+      <hr class="divider">
+
+      <h4>Repeat Sprint Endurance (10 min)</h4>
+      <div class="callout">
+        Lacrosse speed must hold up in the 4th quarter. Repeat sprint ability — not just single-rep speed — is what separates conditioned players from fast-but-tired ones.
+      </div>
+      <div class="drill-grid">
+        <div class="drill-card">
+          <div class="drill-name">30-30 Sprints</div>
+          <div class="drill-detail">Sprint 30 yards, rest 30 seconds, repeat 8–10 times. Percentage of first sprint must stay above 90%. If it drops below, extend rest.</div>
+          <div class="drill-tags"><span class="tag reps">8–10 reps</span><span class="tag time">30s rest</span></div>
+        </div>
+        <div class="drill-card">
+          <div class="drill-name">Sprint-Backpedal-Sprint</div>
+          <div class="drill-detail">Sprint 15 yards, backpedal 10 yards, sprint 15 yards. One fluid motion — no stopping between movements. Matches the defensive transition pattern exactly.</div>
+          <div class="drill-tags"><span class="tag reps">8 reps</span><span class="tag time">45s rest</span><span class="tag focus">Defense-specific</span></div>
+        </div>
+      </div>
+
+      <a class="video-ref" href="https://www.youtube.com/results?search_query=lacrosse+speed+training+sprint+program+athletes" target="_blank">
+        <div class="video-icon">▶</div>
+        <div class="video-info">
+          <div class="video-title">Search: "Lacrosse Sprint Speed Training Program"</div>
+          <div class="video-channel">YouTube — Athletic Lab, ExoS Sports Science recommended</div>
+        </div>
+      </a>
+    </div>
+  </div>
+</div>
+
+
+<!-- ============ LIFTING ============ -->
+<div class="section" id="section-lifting">
+  <div class="pos-badge lift">All Positions</div>
+  <div class="section-title">Lifting Program</div>
+  <p class="section-intro">One combined lifting template all positions share. Monday is lower-focused, Thursday is upper-focused. Positions have an additional day of position-specific work as described in their section.</p>
+
+  <div class="block lift-block open">
+    <div class="block-header" onclick="toggleBlock(this)">
+      <div>
+        <div class="block-title">Monday — Lower Body + Core</div>
+        <div class="block-meta">60 min · All positions</div>
+      </div>
+      <div class="block-toggle">▾</div>
+    </div>
+    <div class="block-body">
+      <table class="workout-table">
+        <thead><tr><th>Exercise</th><th>Phase 1 (wks 1–4)</th><th>Phase 2 (wks 5–9)</th><th>Phase 3–4</th></tr></thead>
+        <tbody>
+          <tr><td class="ex-name">Back or Front Squat</td><td class="scheme">3×8 @60%</td><td class="scheme">4×6 @70%</td><td class="scheme">4×5 @80%</td></tr>
+          <tr><td class="ex-name">Romanian Deadlift</td><td class="scheme">3×10</td><td class="scheme">4×8</td><td class="scheme">4×6 heavy</td></tr>
+          <tr><td class="ex-name">Lateral Lunge</td><td class="scheme">3×8 BW</td><td class="scheme">3×8 +DB</td><td class="scheme">3×10 loaded</td></tr>
+          <tr><td class="ex-name">Box Jump</td><td class="scheme">3×4</td><td class="scheme">4×4</td><td class="scheme">4×5 max height</td></tr>
+          <tr><td class="ex-name">Dead Bug</td><td class="scheme">3×8 each</td><td class="scheme">3×10</td><td class="scheme">3×10 slow</td></tr>
+          <tr><td class="ex-name">Copenhagen Plank</td><td class="scheme">3×20s</td><td class="scheme">3×30s</td><td class="scheme">3×40s</td></tr>
+          <tr><td class="ex-name">Pallof Press</td><td class="scheme">3×10</td><td class="scheme">3×12</td><td class="scheme">4×10 heavier</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="block lift-block">
+    <div class="block-header" onclick="toggleBlock(this)">
+      <div>
+        <div class="block-title">Thursday — Upper Body + Power</div>
+        <div class="block-meta">60 min · All positions</div>
+      </div>
+      <div class="block-toggle">▾</div>
+    </div>
+    <div class="block-body">
+      <table class="workout-table">
+        <thead><tr><th>Exercise</th><th>Phase 1 (wks 1–4)</th><th>Phase 2 (wks 5–9)</th><th>Phase 3–4</th></tr></thead>
+        <tbody>
+          <tr><td class="ex-name">Bench Press or DB Press</td><td class="scheme">3×10 @60%</td><td class="scheme">4×8 @70%</td><td class="scheme">4×6 @75%</td></tr>
+          <tr><td class="ex-name">Pull-Up or Lat Pulldown</td><td class="scheme">3×8</td><td class="scheme">4×8</td><td class="scheme">4×6–8 weighted</td></tr>
+          <tr><td class="ex-name">Overhead Press</td><td class="scheme">3×8</td><td class="scheme">4×6</td><td class="scheme">4×5 heavy</td></tr>
+          <tr><td class="ex-name">DB Row</td><td class="scheme">3×10</td><td class="scheme">4×10</td><td class="scheme">4×8 heavy</td></tr>
+          <tr><td class="ex-name">Med Ball Chest Pass</td><td class="scheme">3×8</td><td class="scheme">4×8</td><td class="scheme">4×8 heavy ball</td></tr>
+          <tr><td class="ex-name">Band Pull-Apart</td><td class="scheme">3×20</td><td class="scheme">3×20</td><td class="scheme">3×25</td></tr>
+          <tr><td class="ex-name">Rotational Med Ball Throw</td><td class="scheme">3×6 each</td><td class="scheme">4×6 each</td><td class="scheme">4×8 each</td></tr>
+        </tbody>
+      </table>
+
+      <hr class="divider">
+
+      <h4>Mobility Finisher — End of Every Session (10 min)</h4>
+      <ul>
+        <li><strong>90-90 Hip Stretch</strong> — 90 seconds each side</li>
+        <li><strong>Couch Stretch</strong> — 60 seconds each side. Hip flexor mobility for sprinting.</li>
+        <li><strong>T-Spine Rotation on Foam Roller</strong> — 10 reps each way. Opens the throwing plane.</li>
+        <li><strong>Shoulder Sleeper Stretch</strong> — 60 seconds each side. Prevents posterior capsule tightness from throwing volume.</li>
+        <li><strong>Ankle Circle + Banded Distraction</strong> — 10 circles each ankle. Often the limiting factor in squat depth and cutting mechanics.</li>
+      </ul>
+
+      <div class="callout gold">
+        <strong>For younger JV players (under 15):</strong> Prioritize movement quality over load. Use bodyweight or light dumbbells for Phases 1 and 2. Never load a bad movement pattern. One extra set of mobility work replaces the last heavy set in every exercise.
+      </div>
+    </div>
+  </div>
+
+  <div class="block lift-block">
+    <div class="block-header" onclick="toggleBlock(this)">
+      <div>
+        <div class="block-title">Recovery &amp; Nutrition Guidelines</div>
+        <div class="block-meta">Non-negotiable habits</div>
+      </div>
+      <div class="block-toggle">▾</div>
+    </div>
+    <div class="block-body">
+      <h4>Sleep</h4>
+      <p>8–9 hours per night for athletes in active training. Two consecutive nights under 7 hours reduces sprint performance by 5–8%. No training adaptation compensates for chronic sleep debt.</p>
+
+      <h4>Nutrition Basics</h4>
+      <ul>
+        <li><strong>Protein:</strong> 0.7–1.0g per pound of bodyweight daily. Spread across 3–4 meals. Chicken, eggs, Greek yogurt, cottage cheese, fish.</li>
+        <li><strong>Carbohydrates:</strong> Train days need them. Rice, oats, potatoes, fruit. Don't fear carbs on training days.</li>
+        <li><strong>Hydration:</strong> Minimum half bodyweight in ounces of water daily. Add 16oz per hour of outdoor training in heat.</li>
+        <li><strong>Pre-workout:</strong> Eat 90 min before. Carbs + protein. Not a protein shake alone.</li>
+        <li><strong>Post-workout:</strong> Within 45 minutes — protein + carbs. Chocolate milk is actually fine and cheap.</li>
+      </ul>
+
+      <h4>Active Recovery (Sunday)</h4>
+      <ul>
+        <li>20-minute walk or easy bike ride</li>
+        <li>Full foam roll sequence: quads, IT band, thoracic spine, lats, calves</li>
+        <li>10-minute stretch: hip flexors, hamstrings, chest, shoulders</li>
+        <li>No organized training. The body adapts on rest days.</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+</main>
+
+<footer>
+  Centreville Lacrosse · Off-Season Program · JV + Varsity · 16 Weeks
+</footer>
+
+<script>
+function showSection(id, btn) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('section-' + id).classList.add('active');
+  btn.classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function toggleBlock(header) {
+  const block = header.closest('.block');
+  block.classList.toggle('open');
+}
+
+// Animate progress bars on load
+window.addEventListener('load', () => {
+  const fills = document.querySelectorAll('.progress-fill');
+  fills.forEach(f => {
+    const w = f.style.width;
+    f.style.width = '0%';
+    setTimeout(() => { f.style.width = w; }, 300);
+  });
+});
+</script>
+</body>
+</html>
