@@ -1,0 +1,931 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All Things IAM | Identity & Access Management Training & Courses</title>
+    <meta name="description" content="Master Identity & Access Management with practical, no-fluff training on Microsoft Entra ID, Okta, SailPoint and beyond — taught by a practitioner with 14+ years in the field.">
+    <meta name="author" content="Andrew Chanthaphone">
+    <meta property="og:title" content="All Things IAM | IAM Training & Courses by Andrew Chanthaphone">
+    <meta property="og:description" content="Practical, no-fluff IAM training on Microsoft Entra ID, Okta, SailPoint. 14+ years in the field.">
+    <meta property="og:type" content="website">
+    <link rel="canonical" href="https://allthingsidentity.com">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Plus Jakarta Sans', 'sans-serif'] },
+                    colors: {
+                        ink:    '#050303',
+                        cream:  '#FBF9F7',
+                        yellow: '#FACC15',
+                        'yellow-dark': '#CA8A04',
+                        'yellow-dim':  '#EAB308',
+                        red:    '#FE2500',
+                        'red-dark': '#D54A1D',
+                        peach:  '#E59266',
+                        brown:  '#572F26',
+                        mist:   '#B1B1B0',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        html { scroll-behavior: smooth; }
+
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+        }
+
+        /* Halftone dot texture overlay */
+        .halftone {
+            background-image: radial-gradient(circle, rgba(251,249,247,0.07) 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+        .halftone-yellow {
+            background-image: radial-gradient(circle, rgba(250,204,21,0.08) 1px, transparent 1px);
+            background-size: 18px 18px;
+        }
+        .halftone-red {
+            background-image: radial-gradient(circle, rgba(254,37,0,0.06) 1px, transparent 1px);
+            background-size: 22px 22px;
+        }
+
+        /* Grid texture */
+        .grid-bg {
+            background-image:
+                linear-gradient(rgba(250,204,21,0.04) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(250,204,21,0.04) 1px, transparent 1px);
+            background-size: 48px 48px;
+        }
+
+        /* Scroll reveal */
+        .reveal {
+            opacity: 0;
+            transform: translateY(28px);
+            transition: opacity 0.65s ease-out, transform 0.65s ease-out;
+        }
+        .reveal.visible { opacity: 1; transform: none; }
+
+        .stagger > * {
+            opacity: 0;
+            transform: translateY(22px);
+            transition: opacity 0.55s ease-out, transform 0.55s ease-out;
+        }
+        .stagger.visible > *:nth-child(1) { opacity:1; transform:none; transition-delay:  0ms; }
+        .stagger.visible > *:nth-child(2) { opacity:1; transform:none; transition-delay: 90ms; }
+        .stagger.visible > *:nth-child(3) { opacity:1; transform:none; transition-delay:180ms; }
+        .stagger.visible > *:nth-child(4) { opacity:1; transform:none; transition-delay:270ms; }
+        .stagger.visible > *:nth-child(5) { opacity:1; transform:none; transition-delay:360ms; }
+        .stagger.visible > *:nth-child(6) { opacity:1; transform:none; transition-delay:450ms; }
+
+        /* Red glow on hover for accent buttons */
+        .btn-red:hover { box-shadow: 0 0 24px rgba(254,37,0,0.35); }
+        .btn-yellow:hover { box-shadow: 0 0 24px rgba(250,204,21,0.3); }
+
+        /* Kit form dark-mode overrides */
+        .kit-dark .formkit-form { background: transparent !important; border: none !important; padding: 0 !important; }
+        .kit-dark .formkit-field input { background: rgba(255,255,255,0.04) !important; border: 1px solid rgba(255,255,255,0.1) !important; color: #FBF9F7 !important; border-radius: 8px !important; }
+        .kit-dark .formkit-field input:focus { border-color: #FACC15 !important; outline: none !important; }
+        .kit-dark .formkit-submit { background: #FACC15 !important; color: #050303 !important; font-weight: 700 !important; border-radius: 8px !important; }
+        .kit-dark .formkit-submit:hover { background: #EAB308 !important; }
+        .kit-dark .formkit-guarantee, .kit-dark .formkit-powered-by { display: none !important; }
+
+        /* Geometric corner decoration */
+        .corner-bracket::before,
+        .corner-bracket::after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            border-color: rgba(254,37,0,0.4);
+            border-style: solid;
+        }
+        .corner-bracket::before { top: 0; left: 0; border-width: 2px 0 0 2px; }
+        .corner-bracket::after  { bottom: 0; right: 0; border-width: 0 2px 2px 0; }
+    </style>
+</head>
+
+<body class="font-sans bg-ink text-cream antialiased">
+
+
+<!-- =====================================================
+     NAVIGATION
+===================================================== -->
+<nav id="navbar" class="fixed top-0 left-0 right-0 z-50 transition-all duration-300" aria-label="Main navigation">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex items-center justify-between h-16 md:h-20">
+
+            <!-- Logo -->
+            <a href="#hero" class="flex items-center cursor-pointer" aria-label="All Things IAM — home">
+                <img src="logo-crop.png" alt="All Things IAM" class="h-10 md:h-12 w-auto" loading="eager">
+            </a>
+
+            <!-- Desktop links -->
+            <div class="hidden md:flex items-center gap-7">
+                <a href="#about"        class="text-sm font-medium text-mist hover:text-cream transition-colors duration-200 cursor-pointer">About</a>
+                <a href="#courses"      class="text-sm font-medium text-mist hover:text-cream transition-colors duration-200 cursor-pointer">Courses</a>
+                <a href="#coaching"     class="text-sm font-medium text-mist hover:text-cream transition-colors duration-200 cursor-pointer">Coaching</a>
+                <a href="#testimonials" class="text-sm font-medium text-mist hover:text-cream transition-colors duration-200 cursor-pointer">Reviews</a>
+                <a href="https://www.youtube.com/@allthingsiam" target="_blank" rel="noopener"
+                   class="text-sm font-medium text-mist hover:text-cream transition-colors duration-200 cursor-pointer">YouTube</a>
+            </div>
+
+            <!-- Desktop CTA -->
+            <a href="#email-signup"
+               class="hidden md:inline-flex items-center gap-2 bg-yellow hover:bg-yellow-dim text-ink font-bold text-sm px-5 py-2.5 rounded-lg transition-all duration-200 cursor-pointer btn-yellow hover:-translate-y-px">
+                Get Free Roadmap
+            </a>
+
+            <!-- Mobile hamburger -->
+            <button id="mob-btn" aria-label="Toggle menu" aria-expanded="false" aria-controls="mob-menu"
+                    class="md:hidden p-2 rounded-lg text-mist hover:text-cream hover:bg-white/5 transition-colors duration-200 cursor-pointer">
+                <svg id="icon-menu"  width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+                <svg id="icon-close" class="hidden" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </button>
+        </div>
+
+        <!-- Mobile menu -->
+        <div id="mob-menu" class="hidden md:hidden pb-5 flex-col gap-1 border-t border-white/5 pt-3" role="menu">
+            <a href="#about"        class="block px-3 py-3 text-sm font-medium text-mist hover:text-yellow hover:bg-white/5 rounded-lg transition-colors duration-200 cursor-pointer" role="menuitem">About</a>
+            <a href="#courses"      class="block px-3 py-3 text-sm font-medium text-mist hover:text-yellow hover:bg-white/5 rounded-lg transition-colors duration-200 cursor-pointer" role="menuitem">Courses</a>
+            <a href="#coaching"     class="block px-3 py-3 text-sm font-medium text-mist hover:text-yellow hover:bg-white/5 rounded-lg transition-colors duration-200 cursor-pointer" role="menuitem">Coaching</a>
+            <a href="#testimonials" class="block px-3 py-3 text-sm font-medium text-mist hover:text-yellow hover:bg-white/5 rounded-lg transition-colors duration-200 cursor-pointer" role="menuitem">Reviews</a>
+            <a href="https://www.youtube.com/@allthingsiam" target="_blank" rel="noopener"
+               class="block px-3 py-3 text-sm font-medium text-mist hover:text-yellow hover:bg-white/5 rounded-lg transition-colors duration-200 cursor-pointer" role="menuitem">YouTube</a>
+            <div class="px-3 pt-3 mt-1 border-t border-white/5">
+                <a href="#email-signup" class="block text-center bg-yellow hover:bg-yellow-dim text-ink font-bold text-sm px-4 py-3 rounded-lg transition-colors duration-200 cursor-pointer">Get Free Roadmap</a>
+            </div>
+        </div>
+    </div>
+</nav>
+
+
+<!-- =====================================================
+     HERO
+===================================================== -->
+<section id="hero" class="relative bg-ink min-h-screen flex items-center overflow-hidden">
+    <!-- Grid texture -->
+    <div class="absolute inset-0 grid-bg pointer-events-none" aria-hidden="true"></div>
+    <!-- Halftone -->
+    <div class="absolute inset-0 halftone pointer-events-none" aria-hidden="true"></div>
+
+    <!-- Glow orbs -->
+    <div class="absolute -top-40 -left-40 w-[600px] h-[600px] bg-yellow/5 rounded-full blur-3xl pointer-events-none" aria-hidden="true"></div>
+    <div class="absolute top-1/3 -right-20 w-80 h-80 bg-red/8 rounded-full blur-3xl pointer-events-none" aria-hidden="true"></div>
+    <div class="absolute bottom-0 left-1/3 w-64 h-64 bg-yellow/5 rounded-full blur-3xl pointer-events-none" aria-hidden="true"></div>
+
+    <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-36 md:py-44 w-full">
+        <div class="max-w-3xl">
+
+            <!-- Badge -->
+            <div class="inline-flex items-center gap-2.5 border border-red/30 bg-red/5 rounded-sm px-4 py-1.5 mb-8">
+                <span class="w-1.5 h-1.5 bg-red rounded-full animate-pulse" aria-hidden="true"></span>
+                <span class="text-red text-xs font-bold uppercase tracking-[0.15em]">IAM Education & Career Development</span>
+            </div>
+
+            <!-- H1 -->
+            <h1 class="text-5xl sm:text-6xl md:text-[72px] font-extrabold text-cream leading-[1.05] tracking-tight mb-6">
+                Master <span class="text-yellow">IAM</span> &amp;<br>
+                Level Up Your<br>
+                Career.
+            </h1>
+
+            <!-- Sub -->
+            <p class="text-lg sm:text-xl text-mist max-w-xl leading-relaxed mb-10">
+                Practical, no-fluff training on Microsoft Entra ID, Okta, SailPoint and beyond — taught by a practitioner with 14+ years in the field.
+            </p>
+
+            <!-- CTAs -->
+            <div class="flex flex-col sm:flex-row gap-4 mb-16">
+                <a href="#email-signup"
+                   class="inline-flex items-center justify-center gap-2 bg-yellow hover:bg-yellow-dim text-ink font-bold text-base px-8 py-4 rounded-lg transition-all duration-200 cursor-pointer btn-yellow hover:-translate-y-0.5 active:translate-y-0">
+                    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                    Get Free IAM Roadmap
+                </a>
+                <a href="#courses"
+                   class="inline-flex items-center justify-center gap-2 border border-cream/15 hover:border-red/50 text-cream font-semibold text-base px-8 py-4 rounded-lg transition-all duration-200 cursor-pointer hover:bg-red/5 hover:-translate-y-0.5 active:translate-y-0">
+                    Browse Courses
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
+                </a>
+            </div>
+
+            <!-- Stats -->
+            <div class="flex flex-wrap gap-x-10 gap-y-5">
+                <div>
+                    <div class="text-3xl sm:text-4xl font-extrabold text-cream">4,200+</div>
+                    <div class="text-[11px] text-mist mt-0.5 uppercase tracking-[0.1em]">YouTube Subscribers</div>
+                </div>
+                <div class="w-px bg-white/8 self-stretch hidden sm:block" aria-hidden="true"></div>
+                <div>
+                    <div class="text-3xl sm:text-4xl font-extrabold text-cream">14+</div>
+                    <div class="text-[11px] text-mist mt-0.5 uppercase tracking-[0.1em]">Years in IAM</div>
+                </div>
+                <div class="w-px bg-white/8 self-stretch hidden sm:block" aria-hidden="true"></div>
+                <div>
+                    <div class="text-3xl sm:text-4xl font-extrabold text-cream">6</div>
+                    <div class="text-[11px] text-mist mt-0.5 uppercase tracking-[0.1em]">Five-Star Reviews</div>
+                </div>
+                <div class="w-px bg-white/8 self-stretch hidden sm:block" aria-hidden="true"></div>
+                <div>
+                    <div class="text-3xl sm:text-4xl font-extrabold text-cream">2</div>
+                    <div class="text-[11px] text-mist mt-0.5 uppercase tracking-[0.1em]">Courses Available</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scroll nudge -->
+    <div class="absolute bottom-8 left-1/2 -translate-x-1/2" aria-hidden="true">
+        <div class="w-5 h-8 rounded-full border-2 border-mist/20 flex items-start justify-center pt-1.5">
+            <div class="w-1 h-2 bg-mist/40 rounded-full animate-bounce"></div>
+        </div>
+    </div>
+</section>
+
+
+<!-- =====================================================
+     FEATURED AT BAR
+===================================================== -->
+<section class="bg-[#0d0b0b] border-y border-white/5 py-5" aria-label="Featured at">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex flex-col sm:flex-row items-center gap-5 sm:gap-8">
+            <span class="text-mist/50 text-[10px] font-bold uppercase tracking-[0.2em] whitespace-nowrap">As featured at</span>
+            <div class="flex flex-wrap items-center justify-center sm:justify-start gap-6 sm:gap-10">
+                <span class="text-mist/60 text-sm font-semibold hover:text-cream transition-colors duration-200 cursor-default">LinkedIn Learning</span>
+                <span class="text-mist/60 text-sm font-semibold hover:text-cream transition-colors duration-200 cursor-default">Identiverse</span>
+                <span class="text-mist/60 text-sm font-semibold hover:text-cream transition-colors duration-200 cursor-default">Cyberjutsu Con</span>
+                <span class="text-mist/60 text-sm font-semibold hover:text-cream transition-colors duration-200 cursor-default">Identity at the Center</span>
+                <span class="text-mist/60 text-sm font-semibold hover:text-cream transition-colors duration-200 cursor-default">IDPro</span>
+                <span class="text-mist/60 text-sm font-semibold hover:text-cream transition-colors duration-200 cursor-default">CSNP</span>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<!-- =====================================================
+     THREE PATHS
+===================================================== -->
+<section class="relative bg-[#080606] py-24 md:py-32 overflow-hidden" aria-labelledby="paths-heading">
+    <div class="absolute inset-0 halftone pointer-events-none opacity-60" aria-hidden="true"></div>
+
+    <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+        <div class="text-center mb-14 reveal">
+            <div class="inline-flex items-center gap-2 border border-red/30 rounded-sm px-3 py-1 mb-5">
+                <span class="text-red text-[10px] font-bold uppercase tracking-[0.2em]">Start Here</span>
+            </div>
+            <h2 id="paths-heading" class="text-3xl sm:text-4xl font-extrabold text-cream mb-4">Three ways to learn with me.</h2>
+            <p class="text-mist text-lg max-w-xl mx-auto">Whether you're brand new to IAM or leveling up, there's a path that fits where you are.</p>
+        </div>
+
+        <div class="grid md:grid-cols-3 gap-6 lg:gap-8 stagger">
+
+            <!-- Free Roadmap -->
+            <a href="#email-signup"
+               class="group relative flex flex-col bg-[#100e0e] hover:bg-[#1a1515] border border-white/8 hover:border-red/40 rounded-xl p-8 transition-all duration-300 cursor-pointer hover:-translate-y-1 corner-bracket"
+               aria-label="Get the free IAM roadmap">
+                <div class="w-12 h-12 bg-yellow/10 group-hover:bg-yellow/20 rounded-lg flex items-center justify-center mb-6 transition-colors duration-300">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#FACC15" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+                </div>
+                <span class="inline-block w-fit bg-emerald-500/10 border border-emerald-500/25 text-emerald-400 text-[10px] font-bold uppercase tracking-[0.12em] px-2.5 py-1 rounded-sm mb-4">Free · Start Here</span>
+                <h3 class="text-xl font-bold text-cream mb-3">The IAM Roadmap</h3>
+                <p class="text-mist text-sm leading-relaxed flex-grow">9 essential steps from a 14-year practitioner. Get the PDF in your inbox in under a minute.</p>
+                <div class="flex items-center gap-1.5 mt-6 text-yellow text-sm font-semibold">
+                    <span>Get the free roadmap</span>
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" class="group-hover:translate-x-1 transition-transform duration-200"><polyline points="9 18 15 12 9 6"/></svg>
+                </div>
+            </a>
+
+            <!-- Courses (highlighted) -->
+            <a href="#courses"
+               class="group relative flex flex-col bg-yellow/5 border-2 border-yellow/40 hover:border-yellow rounded-xl p-8 transition-all duration-300 cursor-pointer hover:-translate-y-1 hover:bg-yellow/8"
+               aria-label="Browse courses">
+                <div class="absolute -top-3.5 left-1/2 -translate-x-1/2 bg-yellow text-ink text-[10px] font-extrabold uppercase tracking-[0.15em] px-4 py-1 rounded-sm">Most Popular</div>
+                <div class="w-12 h-12 bg-yellow/15 rounded-lg flex items-center justify-center mb-6">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#FACC15" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+                </div>
+                <span class="inline-block w-fit bg-yellow/10 border border-yellow/30 text-yellow text-[10px] font-bold uppercase tracking-[0.12em] px-2.5 py-1 rounded-sm mb-4">Self-paced · From $97</span>
+                <h3 class="text-xl font-bold text-cream mb-3">Courses</h3>
+                <p class="text-mist text-sm leading-relaxed flex-grow">Structured deep-dives into Entra ID, IAM career launchpad, and more. Labs, real scenarios, clear pathways.</p>
+                <div class="flex items-center gap-1.5 mt-6 text-yellow text-sm font-semibold">
+                    <span>Browse courses</span>
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" class="group-hover:translate-x-1 transition-transform duration-200"><polyline points="9 18 15 12 9 6"/></svg>
+                </div>
+            </a>
+
+            <!-- Coaching -->
+            <a href="https://allthingsiam.thinkific.com/pages/coaching" target="_blank" rel="noopener"
+               class="group relative flex flex-col bg-[#100e0e] hover:bg-[#1a1515] border border-white/8 hover:border-red/40 rounded-xl p-8 transition-all duration-300 cursor-pointer hover:-translate-y-1 corner-bracket"
+               aria-label="Book a coaching session">
+                <div class="w-12 h-12 bg-red/10 group-hover:bg-red/20 rounded-lg flex items-center justify-center mb-6 transition-colors duration-300">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#FE2500" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                </div>
+                <span class="inline-block w-fit bg-red/10 border border-red/25 text-red text-[10px] font-bold uppercase tracking-[0.12em] px-2.5 py-1 rounded-sm mb-4">1:1 · By appointment</span>
+                <h3 class="text-xl font-bold text-cream mb-3">Coaching & Career Help</h3>
+                <p class="text-mist text-sm leading-relaxed flex-grow">Interview prep, resume reviews, and personalized guidance for breaking in or getting promoted. Limited slots.</p>
+                <div class="flex items-center gap-1.5 mt-6 text-red text-sm font-semibold">
+                    <span>Book a session</span>
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" class="group-hover:translate-x-1 transition-transform duration-200"><polyline points="9 18 15 12 9 6"/></svg>
+                </div>
+            </a>
+
+        </div>
+    </div>
+</section>
+
+
+<!-- =====================================================
+     ABOUT
+===================================================== -->
+<section id="about" class="relative bg-ink py-24 md:py-32 overflow-hidden" aria-labelledby="about-heading">
+    <div class="absolute inset-0 halftone-yellow pointer-events-none" aria-hidden="true"></div>
+    <!-- Red accent stripe -->
+    <div class="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-transparent via-red/30 to-transparent" aria-hidden="true"></div>
+
+    <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid md:grid-cols-2 gap-12 lg:gap-20 items-center">
+
+            <!-- Photo -->
+            <div class="reveal order-2 md:order-1">
+                <div class="relative">
+                    <div class="w-full aspect-[4/5] bg-[#1a1010] rounded-2xl overflow-hidden">
+                        <img
+                            src="Pro_pic.jpeg"
+                            alt="Andrew Chanthaphone — IAM practitioner and educator"
+                            class="w-full h-full object-cover object-top"
+                            onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"
+                        >
+                        <!-- Fallback -->
+                        <div style="display:none" class="w-full h-full bg-gradient-to-br from-[#1a1010] to-[#0d0808] items-center justify-center">
+                            <div class="text-center px-8">
+                                <div class="w-24 h-24 bg-yellow/10 border border-yellow/20 rounded-full flex items-center justify-center mx-auto mb-4">
+                                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#FACC15" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                                </div>
+                                <p class="text-mist/50 text-xs">Add andrew.jpg alongside index.html</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Geometric corner accents -->
+                    <div class="absolute top-4 left-4 w-8 h-8 border-t-2 border-l-2 border-yellow/50 rounded-tl pointer-events-none" aria-hidden="true"></div>
+                    <div class="absolute bottom-4 right-4 w-8 h-8 border-b-2 border-r-2 border-red/50 rounded-br pointer-events-none" aria-hidden="true"></div>
+
+                    <!-- Floating badge -->
+                    <div class="absolute bottom-8 -left-4 sm:-left-8 bg-[#100e0e] border border-yellow/20 rounded-xl px-4 py-3.5">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 bg-yellow rounded-lg flex items-center justify-center flex-shrink-0">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#050303" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                            </div>
+                            <div>
+                                <div class="text-lg font-extrabold text-cream leading-none">14+ Years</div>
+                                <div class="text-[11px] text-mist mt-0.5">IAM Experience</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Copy -->
+            <div class="reveal order-1 md:order-2">
+                <div class="inline-flex items-center gap-2 border border-red/30 rounded-sm px-3 py-1 mb-5">
+                    <span class="text-red text-[10px] font-bold uppercase tracking-[0.2em]">About Me</span>
+                </div>
+                <h2 id="about-heading" class="text-3xl sm:text-4xl font-extrabold text-cream mb-6">
+                    Hi, I'm <em class="not-italic text-yellow">Andrew.</em>
+                </h2>
+                <div class="space-y-4 text-mist leading-relaxed mb-8">
+                    <p>I'm Andrew Chanthaphone — an IAM practitioner, educator, and <strong class="text-cream">LinkedIn Learning instructor</strong> on a mission to make Identity & Access Management approachable and career-changing for everyone.</p>
+                    <p>Over my career I've worked across business analyst, project manager, and director-level IAM roles in both the <strong class="text-cream">federal and commercial sectors</strong>. I specialize in Microsoft Entra ID, Okta, and SailPoint, and I've led large-scale tenant-to-tenant migrations in highly regulated environments.</p>
+                    <p>I've spoken at <strong class="text-cream">Identiverse</strong> and <strong class="text-cream">Cyberjutsu Con</strong>, appeared on <em>Identity at the Center</em>, and built this community because IAM is one of the most important — and underappreciated — disciplines in cybersecurity today.</p>
+                </div>
+
+                <!-- Tags -->
+                <div class="flex flex-wrap gap-2 mb-8">
+                    <span class="bg-yellow/8 border border-yellow/20 text-yellow text-xs font-medium px-3 py-1.5 rounded-sm">Microsoft Entra ID</span>
+                    <span class="bg-yellow/8 border border-yellow/20 text-yellow text-xs font-medium px-3 py-1.5 rounded-sm">Okta</span>
+                    <span class="bg-yellow/8 border border-yellow/20 text-yellow text-xs font-medium px-3 py-1.5 rounded-sm">SailPoint</span>
+                    <span class="bg-white/5 border border-white/10 text-mist text-xs font-medium px-3 py-1.5 rounded-sm">Zero Trust</span>
+                    <span class="bg-white/5 border border-white/10 text-mist text-xs font-medium px-3 py-1.5 rounded-sm">SC-300</span>
+                    <span class="bg-white/5 border border-white/10 text-mist text-xs font-medium px-3 py-1.5 rounded-sm">Federal IAM</span>
+                    <span class="bg-white/5 border border-white/10 text-mist text-xs font-medium px-3 py-1.5 rounded-sm">LinkedIn Learning</span>
+                    <span class="bg-white/5 border border-white/10 text-mist text-xs font-medium px-3 py-1.5 rounded-sm">IDPro Member</span>
+                </div>
+
+                <!-- Media links -->
+                <div>
+                    <p class="text-[10px] font-bold text-mist/50 uppercase tracking-[0.2em] mb-3">Media & Appearances</p>
+                    <div class="space-y-2">
+                        <a href="https://www.identityatthecenter.com/listen/episode/36226f07/114-getting-into-iam-with-andrew-chanthaphone" target="_blank" rel="noopener"
+                           class="flex items-center gap-2 text-sm text-mist hover:text-yellow transition-colors duration-200 cursor-pointer">
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" class="flex-shrink-0"><polyline points="9 18 15 12 9 6"/></svg>
+                            Identity at the Center Podcast (Ep. 114)
+                        </a>
+                        <a href="https://www.youtube.com/watch?v=jn0kYSpKErg" target="_blank" rel="noopener"
+                           class="flex items-center gap-2 text-sm text-mist hover:text-yellow transition-colors duration-200 cursor-pointer">
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" class="flex-shrink-0"><polyline points="9 18 15 12 9 6"/></svg>
+                            Identiverse 2018 — Active Listening Talk
+                        </a>
+                        <a href="https://youtu.be/hKlVRGc5qzg" target="_blank" rel="noopener"
+                           class="flex items-center gap-2 text-sm text-mist hover:text-yellow transition-colors duration-200 cursor-pointer">
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" class="flex-shrink-0"><polyline points="9 18 15 12 9 6"/></svg>
+                            Cyberjutsu Con 4.0 — IAM Talk
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+
+<!-- =====================================================
+     COURSES
+===================================================== -->
+<section id="courses" class="relative bg-[#080606] py-24 md:py-32 overflow-hidden" aria-labelledby="courses-heading">
+    <div class="absolute inset-0 halftone pointer-events-none opacity-70" aria-hidden="true"></div>
+    <!-- Yellow bottom stripe -->
+    <div class="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-yellow/20 to-transparent" aria-hidden="true"></div>
+
+    <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+        <div class="text-center mb-14 reveal">
+            <div class="inline-flex items-center gap-2 border border-yellow/30 rounded-sm px-3 py-1 mb-5">
+                <span class="text-yellow text-[10px] font-bold uppercase tracking-[0.2em]">Courses</span>
+            </div>
+            <h2 id="courses-heading" class="text-3xl sm:text-4xl font-extrabold text-cream mb-4">Learn IAM the Right Way</h2>
+            <p class="text-mist text-lg max-w-xl mx-auto">Structured, practical courses built by a practitioner — not theory dumped from a textbook.</p>
+        </div>
+
+        <div class="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto stagger">
+
+            <!-- Course 1: IAM Career Launchpad -->
+            <div class="bg-[#100e0e] border border-white/8 rounded-2xl overflow-hidden flex flex-col hover:-translate-y-1 hover:border-yellow/30 hover:shadow-2xl transition-all duration-300 group">
+                <!-- Yellow top bar -->
+                <div class="h-1 bg-gradient-to-r from-yellow via-yellow-dim to-transparent"></div>
+                <div class="p-8">
+                    <div class="flex items-start justify-between mb-6">
+                        <div class="w-14 h-14 bg-yellow/10 rounded-xl flex items-center justify-center">
+                            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#FACC15" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.99 12a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4 2.14h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+                        </div>
+                        <span class="bg-emerald-500/10 border border-emerald-500/25 text-emerald-400 text-[10px] font-bold uppercase tracking-[0.1em] px-3 py-1 rounded-sm">Available Now</span>
+                    </div>
+                    <h3 class="text-2xl font-bold text-cream mb-2">IAM Career Launchpad</h3>
+                    <p class="text-mist text-sm leading-relaxed mb-8">Get hired in Identity & Access Management. Covers the landscape, key skills, resume strategy, and how to break into the field at any level.</p>
+
+                    <ul class="space-y-3 mb-8" aria-label="Course topics">
+                        <li class="flex items-center gap-3 text-sm text-mist">
+                            <svg class="flex-shrink-0" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#FACC15" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+                            User Lifecycle Management & the JML Process
+                        </li>
+                        <li class="flex items-center gap-3 text-sm text-mist">
+                            <svg class="flex-shrink-0" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#FACC15" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+                            Federation, SSO & MFA deep dives
+                        </li>
+                        <li class="flex items-center gap-3 text-sm text-mist">
+                            <svg class="flex-shrink-0" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#FACC15" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+                            NIST compliance & AAA frameworks
+                        </li>
+                        <li class="flex items-center gap-3 text-sm text-mist">
+                            <svg class="flex-shrink-0" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#FACC15" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+                            Resume strategy & interview prep
+                        </li>
+                        <li class="flex items-center gap-3 text-sm text-mist">
+                            <svg class="flex-shrink-0" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#FACC15" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+                            Hands-on labs with real-world scenarios
+                        </li>
+                    </ul>
+
+                    <div class="flex items-center justify-between">
+                        <span class="text-3xl font-extrabold text-cream">From $97</span>
+                        <a href="https://allthingsiam.thinkific.com/" target="_blank" rel="noopener"
+                           class="inline-flex items-center gap-2 bg-yellow hover:bg-yellow-dim text-ink font-bold text-sm px-6 py-3 rounded-lg transition-all duration-200 cursor-pointer btn-yellow">
+                            Enroll Now
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Course 2: Entra ID Mastery (Coming Soon) -->
+            <div class="relative bg-[#100e0e] border border-white/8 rounded-2xl overflow-hidden flex flex-col">
+                <!-- Red top bar -->
+                <div class="h-1 bg-gradient-to-r from-red via-red-dark to-transparent"></div>
+
+                <!-- Coming soon overlay -->
+                <div class="absolute inset-0 top-1 bg-ink/60 backdrop-blur-[1px] z-10 flex items-center justify-center rounded-b-2xl">
+                    <div class="text-center bg-[#100e0e]/90 border border-red/25 rounded-xl px-8 py-6 mx-4">
+                        <div class="w-12 h-12 bg-red/10 border border-red/20 rounded-lg flex items-center justify-center mx-auto mb-3">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#FE2500" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                        </div>
+                        <p class="text-red font-bold text-lg mb-1">Coming Soon</p>
+                        <p class="text-mist text-sm mb-5">Join the waitlist for early access &amp; launch pricing</p>
+                        <a href="https://allthingsidentity.com/entra-id-mastery" target="_blank" rel="noopener"
+                           class="inline-flex items-center gap-2 bg-yellow hover:bg-yellow-dim text-ink font-bold text-sm px-6 py-2.5 rounded-lg transition-all duration-200 cursor-pointer btn-yellow">
+                            Join Waitlist
+                        </a>
+                    </div>
+                </div>
+
+                <div class="p-8" aria-hidden="true">
+                    <div class="flex items-start justify-between mb-6">
+                        <div class="w-14 h-14 bg-blue-500/10 rounded-xl flex items-center justify-center">
+                            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#60A5FA" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                        </div>
+                        <span class="bg-blue-500/10 border border-blue-500/20 text-blue-400 text-[10px] font-bold uppercase tracking-[0.1em] px-3 py-1 rounded-sm">New</span>
+                    </div>
+                    <h3 class="text-2xl font-bold text-cream mb-2">Microsoft Entra ID Mastery</h3>
+                    <p class="text-mist text-sm leading-relaxed mb-8">A comprehensive 8-module deep dive into Entra ID — from fundamentals to advanced governance, automation, and enterprise architecture.</p>
+                    <ul class="space-y-3">
+                        <li class="flex items-center gap-3 text-sm text-mist/50"><svg class="flex-shrink-0" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#4B5563" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>8 comprehensive modules</li>
+                        <li class="flex items-center gap-3 text-sm text-mist/50"><svg class="flex-shrink-0" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#4B5563" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>Advanced governance & automation</li>
+                        <li class="flex items-center gap-3 text-sm text-mist/50"><svg class="flex-shrink-0" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#4B5563" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>Enterprise architecture patterns</li>
+                    </ul>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+
+<!-- =====================================================
+     COACHING
+===================================================== -->
+<section id="coaching" class="relative bg-ink py-24 md:py-32 overflow-hidden" aria-labelledby="coaching-heading">
+    <div class="absolute inset-0 halftone-red pointer-events-none" aria-hidden="true"></div>
+    <div class="absolute top-0 right-0 w-1 h-full bg-gradient-to-b from-transparent via-red/20 to-transparent" aria-hidden="true"></div>
+
+    <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid md:grid-cols-2 gap-12 lg:gap-20 items-center">
+
+            <!-- Copy -->
+            <div class="reveal">
+                <div class="inline-flex items-center gap-2 border border-red/30 rounded-sm px-3 py-1 mb-5">
+                    <span class="text-red text-[10px] font-bold uppercase tracking-[0.2em]">1:1 Coaching</span>
+                </div>
+                <h2 id="coaching-heading" class="text-3xl sm:text-4xl font-extrabold text-cream mb-6 leading-tight">
+                    Personalized guidance<br>for your IAM career.
+                </h2>
+                <p class="text-mist text-lg leading-relaxed mb-10">Whether you're breaking into IAM, gunning for a promotion, or prepping for a big interview — you'll get honest, experienced perspective and a clear path forward.</p>
+
+                <div class="space-y-5 mb-10">
+                    <div class="flex items-start gap-4">
+                        <div class="w-10 h-10 bg-red/10 border border-red/20 rounded-lg flex items-center justify-center flex-shrink-0">
+                            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#FE2500" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-cream mb-1">Interview Prep</h3>
+                            <p class="text-mist text-sm">Mock interviews, question walkthroughs, and how to position your experience for IAM roles.</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start gap-4">
+                        <div class="w-10 h-10 bg-yellow/8 border border-yellow/20 rounded-lg flex items-center justify-center flex-shrink-0">
+                            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#FACC15" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-cream mb-1">Resume Reviews</h3>
+                            <p class="text-mist text-sm">IAM-specific resume feedback that gets you noticed by hiring managers and past the ATS.</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start gap-4">
+                        <div class="w-10 h-10 bg-red/10 border border-red/20 rounded-lg flex items-center justify-center flex-shrink-0">
+                            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#FE2500" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-cream mb-1">Career Strategy</h3>
+                            <p class="text-mist text-sm">Personalized roadmap for breaking into IAM or leveling up to senior and director positions.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex flex-col sm:flex-row items-start sm:items-center gap-4">
+                    <a href="https://allthingsiam.thinkific.com/pages/coaching" target="_blank" rel="noopener"
+                       class="inline-flex items-center gap-2 bg-red hover:bg-red-dark text-cream font-bold text-base px-7 py-3.5 rounded-lg transition-all duration-200 cursor-pointer btn-red hover:-translate-y-px">
+                        Book a Session
+                    </a>
+                    <p class="text-mist/50 text-sm">Limited slots available each month.</p>
+                </div>
+            </div>
+
+            <!-- Mini testimonials -->
+            <div class="reveal space-y-4">
+                <div class="bg-[#100e0e] border border-white/8 hover:border-red/20 rounded-xl p-6 transition-colors duration-300">
+                    <div class="flex gap-0.5 mb-4" aria-label="5 stars">
+                        <svg class="w-4 h-4" viewBox="0 0 24 24" fill="#FACC15" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                        <svg class="w-4 h-4" viewBox="0 0 24 24" fill="#FACC15" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                        <svg class="w-4 h-4" viewBox="0 0 24 24" fill="#FACC15" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                        <svg class="w-4 h-4" viewBox="0 0 24 24" fill="#FACC15" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                        <svg class="w-4 h-4" viewBox="0 0 24 24" fill="#FACC15" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                    </div>
+                    <p class="text-mist text-sm leading-relaxed italic mb-5">"He is very professional and applied his extensive background to provide tips on how to bring my best self to an interview. He also helped me build a strong resume to get noticed in the field."</p>
+                    <div class="flex items-center gap-3">
+                        <div class="w-9 h-9 bg-[#1a1515] border border-white/10 rounded-full flex items-center justify-center text-xs font-bold text-cream flex-shrink-0">RL</div>
+                        <div>
+                            <div class="text-cream text-xs font-semibold">Robin Litzenberger</div>
+                            <div class="text-mist/50 text-xs">Cybersecurity Professional</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-[#100e0e] border border-white/8 hover:border-red/20 rounded-xl p-6 transition-colors duration-300">
+                    <div class="flex gap-0.5 mb-4" aria-label="5 stars">
+                        <svg class="w-4 h-4" viewBox="0 0 24 24" fill="#FACC15" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                        <svg class="w-4 h-4" viewBox="0 0 24 24" fill="#FACC15" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                        <svg class="w-4 h-4" viewBox="0 0 24 24" fill="#FACC15" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                        <svg class="w-4 h-4" viewBox="0 0 24 24" fill="#FACC15" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                        <svg class="w-4 h-4" viewBox="0 0 24 24" fill="#FACC15" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                    </div>
+                    <p class="text-mist text-sm leading-relaxed italic mb-5">"I reached out in 2022 with no knowledge about IAM. He was welcoming, coached me, and gave me all the tools I needed to get the foundational knowledge."</p>
+                    <div class="flex items-center gap-3">
+                        <div class="w-9 h-9 bg-[#1a1515] border border-white/10 rounded-full flex items-center justify-center text-xs font-bold text-cream flex-shrink-0">BN</div>
+                        <div>
+                            <div class="text-cream text-xs font-semibold">Buchi Nwankwo</div>
+                            <div class="text-mist/50 text-xs">IAM Engineer</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+
+<!-- =====================================================
+     TESTIMONIALS
+===================================================== -->
+<section id="testimonials" class="relative bg-[#080606] py-24 md:py-32 overflow-hidden" aria-labelledby="testimonials-heading">
+    <div class="absolute inset-0 halftone pointer-events-none opacity-60" aria-hidden="true"></div>
+
+    <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+        <div class="text-center mb-14 reveal">
+            <div class="inline-flex items-center gap-2 border border-yellow/30 rounded-sm px-3 py-1 mb-5">
+                <span class="text-yellow text-[10px] font-bold uppercase tracking-[0.2em]">Student Reviews</span>
+            </div>
+            <h2 id="testimonials-heading" class="text-3xl sm:text-4xl font-extrabold text-cream mb-4">What People Are Saying</h2>
+            <p class="text-mist text-lg">Real feedback from students and professionals who've worked with Andrew.</p>
+        </div>
+
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-5 stagger">
+
+            <div class="group bg-[#100e0e] border border-white/8 hover:border-yellow/25 rounded-xl p-6 transition-all duration-300 cursor-default hover:-translate-y-0.5 flex flex-col">
+                <div class="flex gap-0.5 mb-4" aria-label="5 out of 5 stars">
+                    <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="#FACC15" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                    <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="#FACC15" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                    <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="#FACC15" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                    <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="#FACC15" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                    <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="#FACC15" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                </div>
+                <p class="text-mist text-sm leading-relaxed flex-grow mb-5">"I can definitely vouch for Andrew. Definitely recommend his course as well. It was refreshing when I had my 1:1 with him too! If you are interested in IAM I HIGHLY RECOMMEND his course!"</p>
+                <div class="flex items-center gap-3">
+                    <div class="w-8 h-8 bg-yellow/10 border border-yellow/20 rounded-full flex items-center justify-center text-[11px] font-bold text-yellow flex-shrink-0">AI</div>
+                    <div>
+                        <div class="text-sm font-semibold text-cream">Allon Ingram</div>
+                        <div class="text-xs text-mist/50">IAM Engineer · Microsoft Entra ID</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="group bg-[#100e0e] border border-white/8 hover:border-yellow/25 rounded-xl p-6 transition-all duration-300 cursor-default hover:-translate-y-0.5 flex flex-col">
+                <div class="flex gap-0.5 mb-4" aria-label="5 out of 5 stars">
+                    <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="#FACC15" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                    <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="#FACC15" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                    <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="#FACC15" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                    <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="#FACC15" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                    <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="#FACC15" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                </div>
+                <p class="text-mist text-sm leading-relaxed flex-grow mb-5">"Spent the weekend going through Andrew's IAM Career Launchpad and I am glad I did. The course took a deep dive into key IAM components... My favorite part was the detailed breakdown of NIST compliance."</p>
+                <div class="flex items-center gap-3">
+                    <div class="w-8 h-8 bg-yellow/10 border border-yellow/20 rounded-full flex items-center justify-center text-[11px] font-bold text-yellow flex-shrink-0">YN</div>
+                    <div>
+                        <div class="text-sm font-semibold text-cream">Yatah Ndimufor</div>
+                        <div class="text-xs text-mist/50">IAM Analyst · Okta Certified Professional</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="group bg-[#100e0e] border border-white/8 hover:border-yellow/25 rounded-xl p-6 transition-all duration-300 cursor-default hover:-translate-y-0.5 flex flex-col">
+                <div class="flex gap-0.5 mb-4" aria-label="5 out of 5 stars">
+                    <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="#FACC15" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                    <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="#FACC15" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                    <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="#FACC15" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                    <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="#FACC15" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                    <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="#FACC15" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                </div>
+                <p class="text-mist text-sm leading-relaxed flex-grow mb-5">"I cannot thank Andrew enough. I reached out in 2022 with no knowledge about IAM. He was welcoming, coached me, and gave me all the tools I needed to get the foundational knowledge."</p>
+                <div class="flex items-center gap-3">
+                    <div class="w-8 h-8 bg-yellow/10 border border-yellow/20 rounded-full flex items-center justify-center text-[11px] font-bold text-yellow flex-shrink-0">BN</div>
+                    <div>
+                        <div class="text-sm font-semibold text-cream">Buchi Nwankwo</div>
+                        <div class="text-xs text-mist/50">IAM Engineer</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="group bg-[#100e0e] border border-white/8 hover:border-yellow/25 rounded-xl p-6 transition-all duration-300 cursor-default hover:-translate-y-0.5 flex flex-col">
+                <div class="flex gap-0.5 mb-4" aria-label="5 out of 5 stars">
+                    <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="#FACC15" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                    <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="#FACC15" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                    <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="#FACC15" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                    <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="#FACC15" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                    <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="#FACC15" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                </div>
+                <p class="text-mist text-sm leading-relaxed flex-grow mb-5">"He is very professional and applied his extensive background to provide tips on how to bring my best self to an interview. He also helped me build a strong resume to get noticed in the field."</p>
+                <div class="flex items-center gap-3">
+                    <div class="w-8 h-8 bg-yellow/10 border border-yellow/20 rounded-full flex items-center justify-center text-[11px] font-bold text-yellow flex-shrink-0">RL</div>
+                    <div>
+                        <div class="text-sm font-semibold text-cream">Robin Litzenberger</div>
+                        <div class="text-xs text-mist/50">Cybersecurity Professional</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="group bg-[#100e0e] border border-white/8 hover:border-yellow/25 rounded-xl p-6 transition-all duration-300 cursor-default hover:-translate-y-0.5 flex flex-col">
+                <div class="flex gap-0.5 mb-4" aria-label="5 out of 5 stars">
+                    <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="#FACC15" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                    <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="#FACC15" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                    <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="#FACC15" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                    <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="#FACC15" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                    <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="#FACC15" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                </div>
+                <p class="text-mist text-sm leading-relaxed flex-grow mb-5">"The clear explanation of how NIST guidelines shape identity validation connected a lot of dots for me. The hands-on labs make the learning even more valuable. Solid for beginners and experienced folks alike."</p>
+                <div class="flex items-center gap-3">
+                    <div class="w-8 h-8 bg-yellow/10 border border-yellow/20 rounded-full flex items-center justify-center text-[11px] font-bold text-yellow flex-shrink-0">KN</div>
+                    <div>
+                        <div class="text-sm font-semibold text-cream">Kingsly Nwankpah</div>
+                        <div class="text-xs text-mist/50">IAM Analyst · Azure Entra ID · CompTIA Security+</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="group bg-[#100e0e] border border-white/8 hover:border-yellow/25 rounded-xl p-6 transition-all duration-300 cursor-default hover:-translate-y-0.5 flex flex-col">
+                <div class="flex gap-0.5 mb-4" aria-label="5 out of 5 stars">
+                    <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="#FACC15" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                    <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="#FACC15" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                    <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="#FACC15" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                    <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="#FACC15" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                    <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="#FACC15" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                </div>
+                <p class="text-mist text-sm leading-relaxed flex-grow mb-5">"Knowing which acronym to use in a specific environment and the why behind it is most important. Andrew's course delivers exactly that kind of practical clarity — not just theory."</p>
+                <div class="flex items-center gap-3">
+                    <div class="w-8 h-8 bg-yellow/10 border border-yellow/20 rounded-full flex items-center justify-center text-[11px] font-bold text-yellow flex-shrink-0">TM</div>
+                    <div>
+                        <div class="text-sm font-semibold text-cream">Tyus Montgomery</div>
+                        <div class="text-xs text-mist/50">IAM Professional · SC-300 · Security+</div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+
+<!-- =====================================================
+     EMAIL SIGNUP
+===================================================== -->
+<section id="email-signup" class="relative bg-ink py-24 md:py-32 overflow-hidden" aria-labelledby="signup-heading">
+    <div class="absolute inset-0 grid-bg pointer-events-none" aria-hidden="true"></div>
+    <div class="absolute inset-0 halftone pointer-events-none" aria-hidden="true"></div>
+    <!-- Yellow glow -->
+    <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-32 bg-yellow/8 rounded-full blur-3xl pointer-events-none" aria-hidden="true"></div>
+    <!-- Red glow bottom right -->
+    <div class="absolute bottom-0 right-0 w-64 h-64 bg-red/5 rounded-full blur-3xl pointer-events-none" aria-hidden="true"></div>
+
+    <div class="relative max-w-2xl mx-auto px-4 sm:px-6 text-center">
+        <div class="reveal">
+            <!-- Icon -->
+            <div class="w-16 h-16 bg-yellow/10 border border-yellow/25 rounded-xl flex items-center justify-center mx-auto mb-8">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#FACC15" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+            </div>
+
+            <div class="inline-flex items-center gap-2 border border-yellow/30 rounded-sm px-3 py-1 mb-5">
+                <span class="text-yellow text-[10px] font-bold uppercase tracking-[0.2em]">Free Resource</span>
+            </div>
+            <h2 id="signup-heading" class="text-3xl sm:text-4xl font-extrabold text-cream mb-4">Get Your Free IAM Roadmap</h2>
+            <p class="text-mist text-lg mb-10 max-w-lg mx-auto leading-relaxed">Not sure where to start in IAM? Get 9 essential steps from a 14-year practitioner straight to your inbox — in under a minute.</p>
+
+            <div class="max-w-md mx-auto mb-4 kit-dark">
+                <script async data-uid="b4ddb25752" src="https://all-things-iam.kit.com/b4ddb25752/index.js"></script>
+            </div>
+            <p class="text-mist/40 text-xs">No spam, ever. Unsubscribe anytime.</p>
+        </div>
+    </div>
+</section>
+
+
+<!-- =====================================================
+     FOOTER
+===================================================== -->
+<footer class="bg-[#030202] border-t border-white/5 py-10" role="contentinfo">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex flex-col md:flex-row items-center justify-between gap-6">
+
+            <!-- Logo -->
+            <div class="flex flex-col items-center md:items-start gap-1.5">
+                <a href="#hero" class="cursor-pointer">
+                    <img src="logo-crop.png" alt="All Things IAM" class="h-9 w-auto" loading="lazy">
+                </a>
+                <p class="text-mist/40 text-xs">Practical IAM education for the real world.</p>
+            </div>
+
+            <!-- Nav -->
+            <nav class="flex flex-wrap justify-center gap-5" aria-label="Footer navigation">
+                <a href="#about"        class="text-xs text-mist/50 hover:text-cream transition-colors duration-200 cursor-pointer">About</a>
+                <a href="#courses"      class="text-xs text-mist/50 hover:text-cream transition-colors duration-200 cursor-pointer">Courses</a>
+                <a href="#coaching"     class="text-xs text-mist/50 hover:text-cream transition-colors duration-200 cursor-pointer">Coaching</a>
+                <a href="#testimonials" class="text-xs text-mist/50 hover:text-cream transition-colors duration-200 cursor-pointer">Reviews</a>
+                <a href="https://www.youtube.com/@allthingsiam"        target="_blank" rel="noopener" class="text-xs text-mist/50 hover:text-cream transition-colors duration-200 cursor-pointer">YouTube</a>
+                <a href="https://www.linkedin.com/in/andrewchanthaphone/" target="_blank" rel="noopener" class="text-xs text-mist/50 hover:text-cream transition-colors duration-200 cursor-pointer">LinkedIn</a>
+            </nav>
+
+            <p class="text-mist/30 text-xs text-center md:text-right">
+                &copy; 2026 All Things IAM<br>Andrew Chanthaphone
+            </p>
+        </div>
+    </div>
+</footer>
+
+
+<!-- =====================================================
+     JS
+===================================================== -->
+<script>
+    // ── Navbar ────────────────────────────────────────────────────
+    const navbar = document.getElementById('navbar');
+    window.addEventListener('scroll', () => {
+        if (window.scrollY > 24) {
+            navbar.classList.add('bg-ink/95', 'backdrop-blur-md', 'border-b', 'border-white/5');
+        } else {
+            navbar.classList.remove('bg-ink/95', 'backdrop-blur-md', 'border-b', 'border-white/5');
+        }
+    }, { passive: true });
+
+    // ── Mobile menu ───────────────────────────────────────────────
+    const mobBtn    = document.getElementById('mob-btn');
+    const mobMenu   = document.getElementById('mob-menu');
+    const iconMenu  = document.getElementById('icon-menu');
+    const iconClose = document.getElementById('icon-close');
+    let menuOpen = false;
+
+    mobBtn.addEventListener('click', () => {
+        menuOpen = !menuOpen;
+        mobMenu.classList.toggle('hidden', !menuOpen);
+        mobMenu.classList.toggle('flex',    menuOpen);
+        iconMenu.classList.toggle('hidden',  menuOpen);
+        iconClose.classList.toggle('hidden', !menuOpen);
+        mobBtn.setAttribute('aria-expanded', String(menuOpen));
+    });
+    mobMenu.querySelectorAll('a').forEach(a => {
+        a.addEventListener('click', () => {
+            menuOpen = false;
+            mobMenu.classList.add('hidden');
+            mobMenu.classList.remove('flex');
+            iconMenu.classList.remove('hidden');
+            iconClose.classList.add('hidden');
+            mobBtn.setAttribute('aria-expanded', 'false');
+        });
+    });
+
+    // ── Scroll reveal ─────────────────────────────────────────────
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (!reduced) {
+        const obs = new IntersectionObserver((entries) => {
+            entries.forEach(e => {
+                if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); }
+            });
+        }, { threshold: 0.08, rootMargin: '0px 0px -48px 0px' });
+        document.querySelectorAll('.reveal, .stagger').forEach(el => obs.observe(el));
+    } else {
+        document.querySelectorAll('.reveal, .stagger').forEach(el => {
+            el.style.opacity = '1'; el.style.transform = 'none';
+        });
+    }
+
+    // ── Smooth scroll ─────────────────────────────────────────────
+    document.querySelectorAll('a[href^="#"]').forEach(a => {
+        a.addEventListener('click', function(e) {
+            const target = document.querySelector(this.getAttribute('href'));
+            if (!target) return;
+            e.preventDefault();
+            const top = target.getBoundingClientRect().top + window.scrollY - navbar.offsetHeight - 16;
+            window.scrollTo({ top, behavior: reduced ? 'instant' : 'smooth' });
+        });
+    });
+
+</script>
+
+</body>
+</html>

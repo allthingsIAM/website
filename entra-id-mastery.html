@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Microsoft Entra ID Mastery | All Things IAM</title>
+    <meta name="description" content="An 8-module deep dive into Entra ID governance, lifecycle, conditional access, and enterprise architecture — taught by a 14-year practitioner.">
+    <meta name="author" content="Andrew Chanthaphone">
+    <meta property="og:title" content="Microsoft Entra ID Mastery Course | All Things IAM">
+    <meta property="og:description" content="8 modules. 50+ videos. 20 hands-on labs. Built for IAM practitioners who want a repeatable framework — not more docs to read.">
+    <meta property="og:type" content="website">
+    <link rel="canonical" href="https://allthingsidentity.com/entra-id-mastery">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Plus Jakarta Sans', 'sans-serif'] },
+                    colors: {
+                        ink:    '#050303',
+                        cream:  '#FBF9F7',
+                        yellow: '#FACC15',
+                        'yellow-dark': '#CA8A04',
+                        'yellow-dim':  '#EAB308',
+                        red:    '#FE2500',
+                        'red-dark': '#D54A1D',
+                        peach:  '#E59266',
+                        brown:  '#572F26',
+                        mist:   '#B1B1B0',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        html { scroll-behavior: smooth; }
+
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+        }
+
+        .halftone {
+            background-image: radial-gradient(circle, rgba(251,249,247,0.07) 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+        .halftone-yellow {
+            background-image: radial-gradient(circle, rgba(250,204,21,0.08) 1px, transparent 1px);
+            background-size: 18px 18px;
+        }
+        .grid-bg {
+            background-image:
+                linear-gradient(rgba(250,204,21,0.04) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(250,204,21,0.04) 1px, transparent 1px);
+            background-size: 48px 48px;
+        }
+
+        .reveal {
+            opacity: 0;
+            transform: translateY(28px);
+            transition: opacity 0.65s ease-out, transform 0.65s ease-out;
+        }
+        .reveal.visible { opacity: 1; transform: none; }
+
+        .stagger > * {
+            opacity: 0;
+            transform: translateY(22px);
+            transition: opacity 0.55s ease-out, transform 0.55s ease-out;
+        }
+        .stagger.visible > *:nth-child(1)  { opacity:1; transform:none; transition-delay:  0ms; }
+        .stagger.visible > *:nth-child(2)  { opacity:1; transform:none; transition-delay: 80ms; }
+        .stagger.visible > *:nth-child(3)  { opacity:1; transform:none; transition-delay:160ms; }
+        .stagger.visible > *:nth-child(4)  { opacity:1; transform:none; transition-delay:240ms; }
+        .stagger.visible > *:nth-child(5)  { opacity:1; transform:none; transition-delay:320ms; }
+        .stagger.visible > *:nth-child(6)  { opacity:1; transform:none; transition-delay:400ms; }
+        .stagger.visible > *:nth-child(7)  { opacity:1; transform:none; transition-delay:480ms; }
+        .stagger.visible > *:nth-child(8)  { opacity:1; transform:none; transition-delay:560ms; }
+
+        .btn-yellow:hover { box-shadow: 0 0 24px rgba(250,204,21,0.3); }
+        .btn-red:hover    { box-shadow: 0 0 24px rgba(254,37,0,0.35); }
+
+        /* Kit form dark overrides */
+        .kit-dark .formkit-form { background: transparent !important; border: none !important; padding: 0 !important; }
+        .kit-dark .formkit-field input { background: rgba(255,255,255,0.04) !important; border: 1px solid rgba(255,255,255,0.1) !important; color: #FBF9F7 !important; border-radius: 8px !important; }
+        .kit-dark .formkit-field input:focus { border-color: #FACC15 !important; outline: none !important; }
+        .kit-dark .formkit-submit { background: #FACC15 !important; color: #050303 !important; font-weight: 700 !important; border-radius: 8px !important; }
+        .kit-dark .formkit-submit:hover { background: #EAB308 !important; }
+        .kit-dark .formkit-guarantee, .kit-dark .formkit-powered-by { display: none !important; }
+    </style>
+</head>
+
+<body class="font-sans bg-ink text-cream antialiased">
+
+
+<!-- =====================================================
+     NAVIGATION
+===================================================== -->
+<nav id="navbar" class="fixed top-0 left-0 right-0 z-50 transition-all duration-300" aria-label="Main navigation">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex items-center justify-between h-16 md:h-20">
+
+            <a href="/" class="flex items-center cursor-pointer" aria-label="All Things IAM — home">
+                <img src="logo-crop.png" alt="All Things IAM" class="h-10 md:h-12 w-auto" loading="eager">
+            </a>
+
+            <div class="hidden md:flex items-center gap-7">
+                <a href="/#about"        class="text-sm font-medium text-mist hover:text-cream transition-colors duration-200 cursor-pointer">About</a>
+                <a href="/#courses"      class="text-sm font-medium text-mist hover:text-cream transition-colors duration-200 cursor-pointer">Courses</a>
+                <a href="/#coaching"     class="text-sm font-medium text-mist hover:text-cream transition-colors duration-200 cursor-pointer">Coaching</a>
+                <a href="/#testimonials" class="text-sm font-medium text-mist hover:text-cream transition-colors duration-200 cursor-pointer">Reviews</a>
+                <a href="https://www.youtube.com/@allthingsiam" target="_blank" rel="noopener"
+                   class="text-sm font-medium text-mist hover:text-cream transition-colors duration-200 cursor-pointer">YouTube</a>
+            </div>
+
+            <a href="#waitlist"
+               class="hidden md:inline-flex items-center gap-2 bg-yellow hover:bg-yellow-dim text-ink font-bold text-sm px-5 py-2.5 rounded-lg transition-all duration-200 cursor-pointer btn-yellow hover:-translate-y-px">
+                Join Waitlist
+            </a>
+
+            <button id="mob-btn" aria-label="Toggle menu" aria-expanded="false" aria-controls="mob-menu"
+                    class="md:hidden p-2 rounded-lg text-mist hover:text-cream hover:bg-white/5 transition-colors duration-200 cursor-pointer">
+                <svg id="icon-menu"  width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+                <svg id="icon-close" class="hidden" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </button>
+        </div>
+
+        <div id="mob-menu" class="hidden md:hidden pb-5 flex-col gap-1 border-t border-white/5 pt-3" role="menu">
+            <a href="/#about"        class="block px-3 py-3 text-sm font-medium text-mist hover:text-yellow hover:bg-white/5 rounded-lg transition-colors duration-200 cursor-pointer" role="menuitem">About</a>
+            <a href="/#courses"      class="block px-3 py-3 text-sm font-medium text-mist hover:text-yellow hover:bg-white/5 rounded-lg transition-colors duration-200 cursor-pointer" role="menuitem">Courses</a>
+            <a href="/#coaching"     class="block px-3 py-3 text-sm font-medium text-mist hover:text-yellow hover:bg-white/5 rounded-lg transition-colors duration-200 cursor-pointer" role="menuitem">Coaching</a>
+            <a href="/#testimonials" class="block px-3 py-3 text-sm font-medium text-mist hover:text-yellow hover:bg-white/5 rounded-lg transition-colors duration-200 cursor-pointer" role="menuitem">Reviews</a>
+            <a href="https://www.youtube.com/@allthingsiam" target="_blank" rel="noopener"
+               class="block px-3 py-3 text-sm font-medium text-mist hover:text-yellow hover:bg-white/5 rounded-lg transition-colors duration-200 cursor-pointer" role="menuitem">YouTube</a>
+            <div class="px-3 pt-3 mt-1 border-t border-white/5">
+                <a href="#waitlist" class="block text-center bg-yellow hover:bg-yellow-dim text-ink font-bold text-sm px-4 py-3 rounded-lg transition-colors duration-200 cursor-pointer">Join Waitlist</a>
+            </div>
+        </div>
+    </div>
+</nav>
+
+
+<!-- =====================================================
+     HERO
+===================================================== -->
+<section id="hero" class="relative bg-ink min-h-screen flex items-center overflow-hidden">
+    <div class="absolute inset-0 grid-bg pointer-events-none" aria-hidden="true"></div>
+    <div class="absolute inset-0 halftone pointer-events-none" aria-hidden="true"></div>
+
+    <div class="absolute -top-40 -right-40 w-[600px] h-[600px] bg-yellow/5 rounded-full blur-3xl pointer-events-none" aria-hidden="true"></div>
+    <div class="absolute bottom-20 -left-20 w-80 h-80 bg-red/6 rounded-full blur-3xl pointer-events-none" aria-hidden="true"></div>
+
+    <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-36 md:py-44 w-full">
+        <div class="max-w-3xl">
+
+            <!-- Badge -->
+            <div class="flex flex-wrap items-center gap-3 mb-8">
+                <div class="inline-flex items-center gap-2 border border-yellow/30 bg-yellow/5 rounded-sm px-4 py-1.5">
+                    <span class="text-yellow text-xs font-bold uppercase tracking-[0.15em]">New Course</span>
+                </div>
+                <div class="inline-flex items-center gap-2 border border-red/30 bg-red/5 rounded-sm px-4 py-1.5">
+                    <span class="w-1.5 h-1.5 bg-red rounded-full animate-pulse" aria-hidden="true"></span>
+                    <span class="text-red text-xs font-bold uppercase tracking-[0.15em]">Launching Q3 2026</span>
+                </div>
+            </div>
+
+            <h1 class="text-5xl sm:text-6xl md:text-[72px] font-extrabold text-cream leading-[1.05] tracking-tight mb-6">
+                Microsoft<br>
+                <span class="text-yellow">Entra ID</span><br>
+                Mastery.
+            </h1>
+
+            <p class="text-lg sm:text-xl text-mist max-w-xl leading-relaxed mb-10">
+                An 8-module deep dive into Entra ID governance, lifecycle, conditional access, and enterprise architecture — taught by a practitioner who's built this in federal and commercial environments.
+            </p>
+
+            <div class="flex flex-col sm:flex-row gap-4 mb-16">
+                <a href="#waitlist"
+                   class="inline-flex items-center justify-center gap-2 bg-yellow hover:bg-yellow-dim text-ink font-bold text-base px-8 py-4 rounded-lg transition-all duration-200 cursor-pointer btn-yellow hover:-translate-y-0.5">
+                    Get Early Access
+                </a>
+                <a href="#curriculum"
+                   class="inline-flex items-center justify-center gap-2 border border-cream/15 hover:border-yellow/40 text-cream font-semibold text-base px-8 py-4 rounded-lg transition-all duration-200 cursor-pointer hover:bg-yellow/5 hover:-translate-y-0.5">
+                    View Curriculum
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
+                </a>
+            </div>
+
+            <p class="text-mist/50 text-sm mb-8">Free to join. Early access pricing for waitlist members.</p>
+
+            <!-- Stats -->
+            <div class="flex flex-wrap gap-x-10 gap-y-5">
+                <div>
+                    <div class="text-3xl font-extrabold text-cream">8</div>
+                    <div class="text-[11px] text-mist mt-0.5 uppercase tracking-[0.1em]">Modules</div>
+                </div>
+                <div class="w-px bg-white/8 self-stretch hidden sm:block" aria-hidden="true"></div>
+                <div>
+                    <div class="text-3xl font-extrabold text-cream">50+</div>
+                    <div class="text-[11px] text-mist mt-0.5 uppercase tracking-[0.1em]">Videos</div>
+                </div>
+                <div class="w-px bg-white/8 self-stretch hidden sm:block" aria-hidden="true"></div>
+                <div>
+                    <div class="text-3xl font-extrabold text-cream">20</div>
+                    <div class="text-[11px] text-mist mt-0.5 uppercase tracking-[0.1em]">Hands-on Labs</div>
+                </div>
+                <div class="w-px bg-white/8 self-stretch hidden sm:block" aria-hidden="true"></div>
+                <div>
+                    <div class="text-3xl font-extrabold text-cream">14+</div>
+                    <div class="text-[11px] text-mist mt-0.5 uppercase tracking-[0.1em]">Years Teaching This</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<!-- =====================================================
+     WHO IT'S FOR
+===================================================== -->
+<section class="relative bg-[#080606] py-24 md:py-32 overflow-hidden" aria-labelledby="for-heading">
+    <div class="absolute inset-0 halftone pointer-events-none opacity-60" aria-hidden="true"></div>
+
+    <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-14 reveal">
+            <div class="inline-flex items-center gap-2 border border-red/30 rounded-sm px-3 py-1 mb-5">
+                <span class="text-red text-[10px] font-bold uppercase tracking-[0.2em]">Who It's For</span>
+            </div>
+            <h2 id="for-heading" class="text-3xl sm:text-4xl font-extrabold text-cream mb-4">Built for two types of people.</h2>
+            <p class="text-mist text-lg max-w-xl mx-auto">Whether you're already working in IAM or coming from a broader IT background, this course meets you where you are.</p>
+        </div>
+
+        <div class="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto stagger">
+
+            <div class="bg-[#100e0e] border border-white/8 hover:border-yellow/30 rounded-xl p-8 transition-all duration-300 hover:-translate-y-1">
+                <div class="w-12 h-12 bg-yellow/10 rounded-lg flex items-center justify-center mb-5">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#FACC15" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                </div>
+                <h3 class="text-xl font-bold text-cream mb-3">IAM practitioners leveling up</h3>
+                <p class="text-mist text-sm leading-relaxed">You've worked with Entra ID but you're stitching together governance strategy from docs, forums, and guesswork. This course gives you a repeatable framework — not more tabs to read.</p>
+            </div>
+
+            <div class="bg-[#100e0e] border border-white/8 hover:border-yellow/30 rounded-xl p-8 transition-all duration-300 hover:-translate-y-1">
+                <div class="w-12 h-12 bg-red/10 rounded-lg flex items-center justify-center mb-5">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#FE2500" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.99 12a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4 2.14h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+                </div>
+                <h3 class="text-xl font-bold text-cream mb-3">New to IAM, learning Entra ID</h3>
+                <p class="text-mist text-sm leading-relaxed">You're coming from IT, sysadmin, or a broader security background and want to learn identity right the first time — starting with the platform most enterprise environments actually run.</p>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+
+<!-- =====================================================
+     THE GAP
+===================================================== -->
+<section class="relative bg-ink py-24 md:py-32 overflow-hidden" aria-labelledby="gap-heading">
+    <div class="absolute inset-0 halftone-yellow pointer-events-none" aria-hidden="true"></div>
+    <div class="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-transparent via-red/30 to-transparent" aria-hidden="true"></div>
+
+    <div class="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="reveal">
+            <div class="inline-flex items-center gap-2 border border-yellow/30 rounded-sm px-3 py-1 mb-5">
+                <span class="text-yellow text-[10px] font-bold uppercase tracking-[0.2em]">Why This Course Exists</span>
+            </div>
+            <h2 id="gap-heading" class="text-3xl sm:text-4xl font-extrabold text-cream mb-8 leading-tight">
+                The gap nobody<br>talks about.
+            </h2>
+
+            <p class="text-mist text-lg leading-relaxed mb-10">
+                You know the Entra ID syntax. You can spin up conditional access policies. But when someone asks you to design a tenant-wide identity governance strategy, you're stitching together answers from six different Microsoft docs, three Stack Overflow threads, and whatever you remember from that one Identiverse talk.
+            </p>
+
+            <p class="text-cream text-xl font-semibold mb-10">That's not a skill problem. It's a framework problem.</p>
+
+            <div class="space-y-6">
+                <div class="flex items-start gap-5">
+                    <div class="w-8 h-8 bg-yellow/10 border border-yellow/25 rounded-sm flex items-center justify-center flex-shrink-0 mt-0.5">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#FACC15" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
+                    </div>
+                    <p class="text-mist leading-relaxed">This course teaches you <strong class="text-cream">how to think about Entra ID governance</strong>, not just how to click through the portal. Every module is built around the decisions you'll actually face — what to federate, when to automate, how to structure access for an org that keeps changing.</p>
+                </div>
+
+                <div class="flex items-start gap-5">
+                    <div class="w-8 h-8 bg-yellow/10 border border-yellow/25 rounded-sm flex items-center justify-center flex-shrink-0 mt-0.5">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#FACC15" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
+                    </div>
+                    <p class="text-mist leading-relaxed">The labs aren't sandboxed theory. They're <strong class="text-cream">built from real federal and commercial scenarios</strong> — the same environments where these decisions have real consequences.</p>
+                </div>
+
+                <div class="flex items-start gap-5">
+                    <div class="w-8 h-8 bg-yellow/10 border border-yellow/25 rounded-sm flex items-center justify-center flex-shrink-0 mt-0.5">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#FACC15" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
+                    </div>
+                    <p class="text-mist leading-relaxed">By the end, you won't just know Entra ID. You'll know <strong class="text-cream">when and why to use each piece of it</strong> — and how to explain that to the people who sign off on it.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<!-- =====================================================
+     CURRICULUM
+===================================================== -->
+<section id="curriculum" class="relative bg-[#080606] py-24 md:py-32 overflow-hidden" aria-labelledby="curriculum-heading">
+    <div class="absolute inset-0 halftone pointer-events-none opacity-60" aria-hidden="true"></div>
+
+    <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+        <div class="text-center mb-14 reveal">
+            <div class="inline-flex items-center gap-2 border border-yellow/30 rounded-sm px-3 py-1 mb-5">
+                <span class="text-yellow text-[10px] font-bold uppercase tracking-[0.2em]">Curriculum</span>
+            </div>
+            <h2 id="curriculum-heading" class="text-3xl sm:text-4xl font-extrabold text-cream mb-4">8 modules. No filler.</h2>
+            <p class="text-mist text-lg max-w-xl mx-auto">Each module builds on the last — from tenant fundamentals to advanced enterprise scenarios.</p>
+        </div>
+
+        <div class="grid md:grid-cols-2 gap-4 max-w-5xl mx-auto stagger">
+
+            <div class="group bg-[#100e0e] border border-white/8 hover:border-yellow/30 rounded-xl p-6 transition-all duration-300 hover:-translate-y-0.5 flex items-start gap-5">
+                <div class="flex-shrink-0">
+                    <div class="w-10 h-10 bg-yellow/10 border border-yellow/20 rounded-lg flex items-center justify-center">
+                        <span class="text-yellow text-xs font-extrabold">01</span>
+                    </div>
+                </div>
+                <div>
+                    <h3 class="font-bold text-cream mb-1">Foundations</h3>
+                    <p class="text-mist text-sm leading-relaxed">Tenant configuration, hybrid identity setup, and the mental models that separate theory from practice.</p>
+                </div>
+            </div>
+
+            <div class="group bg-[#100e0e] border border-white/8 hover:border-yellow/30 rounded-xl p-6 transition-all duration-300 hover:-translate-y-0.5 flex items-start gap-5">
+                <div class="flex-shrink-0">
+                    <div class="w-10 h-10 bg-yellow/10 border border-yellow/20 rounded-lg flex items-center justify-center">
+                        <span class="text-yellow text-xs font-extrabold">02</span>
+                    </div>
+                </div>
+                <div>
+                    <h3 class="font-bold text-cream mb-1">Hybrid Identity &amp; AD FS</h3>
+                    <p class="text-mist text-sm leading-relaxed">Federation patterns and when — and why — to replace AD FS with Entra Conditional Access.</p>
+                </div>
+            </div>
+
+            <div class="group bg-[#100e0e] border border-white/8 hover:border-yellow/30 rounded-xl p-6 transition-all duration-300 hover:-translate-y-0.5 flex items-start gap-5">
+                <div class="flex-shrink-0">
+                    <div class="w-10 h-10 bg-yellow/10 border border-yellow/20 rounded-lg flex items-center justify-center">
+                        <span class="text-yellow text-xs font-extrabold">03</span>
+                    </div>
+                </div>
+                <div>
+                    <h3 class="font-bold text-cream mb-1">Authentication &amp; Passwordless</h3>
+                    <p class="text-mist text-sm leading-relaxed">MFA, FIDO2, passkeys, and building authentication strategies that actually stick in the real world.</p>
+                </div>
+            </div>
+
+            <div class="group bg-[#100e0e] border border-white/8 hover:border-yellow/30 rounded-xl p-6 transition-all duration-300 hover:-translate-y-0.5 flex items-start gap-5">
+                <div class="flex-shrink-0">
+                    <div class="w-10 h-10 bg-yellow/10 border border-yellow/20 rounded-lg flex items-center justify-center">
+                        <span class="text-yellow text-xs font-extrabold">04</span>
+                    </div>
+                </div>
+                <div>
+                    <h3 class="font-bold text-cream mb-1">Conditional Access</h3>
+                    <p class="text-mist text-sm leading-relaxed">Beyond the basics — designing risk-aware access controls that protect without breaking workflows.</p>
+                </div>
+            </div>
+
+            <div class="group bg-[#100e0e] border border-white/8 hover:border-yellow/30 rounded-xl p-6 transition-all duration-300 hover:-translate-y-0.5 flex items-start gap-5">
+                <div class="flex-shrink-0">
+                    <div class="w-10 h-10 bg-yellow/10 border border-yellow/20 rounded-lg flex items-center justify-center">
+                        <span class="text-yellow text-xs font-extrabold">05</span>
+                    </div>
+                </div>
+                <div>
+                    <h3 class="font-bold text-cream mb-1">Lifecycle Workflows</h3>
+                    <p class="text-mist text-sm leading-relaxed">Offboarding pipelines, JML automation, and attribute management at scale.</p>
+                </div>
+            </div>
+
+            <div class="group bg-[#100e0e] border border-white/8 hover:border-yellow/30 rounded-xl p-6 transition-all duration-300 hover:-translate-y-0.5 flex items-start gap-5">
+                <div class="flex-shrink-0">
+                    <div class="w-10 h-10 bg-yellow/10 border border-yellow/20 rounded-lg flex items-center justify-center">
+                        <span class="text-yellow text-xs font-extrabold">06</span>
+                    </div>
+                </div>
+                <div>
+                    <h3 class="font-bold text-cream mb-1">Enterprise Governance</h3>
+                    <p class="text-mist text-sm leading-relaxed">Dynamic groups, RBAC, and structuring IAM for organizations — not just environments.</p>
+                </div>
+            </div>
+
+            <div class="group bg-[#100e0e] border border-white/8 hover:border-yellow/30 rounded-xl p-6 transition-all duration-300 hover:-translate-y-0.5 flex items-start gap-5">
+                <div class="flex-shrink-0">
+                    <div class="w-10 h-10 bg-yellow/10 border border-yellow/20 rounded-lg flex items-center justify-center">
+                        <span class="text-yellow text-xs font-extrabold">07</span>
+                    </div>
+                </div>
+                <div>
+                    <h3 class="font-bold text-cream mb-1">Governance &amp; Auditing</h3>
+                    <p class="text-mist text-sm leading-relaxed">Compliance frameworks, Microsoft Graph reporting, and dashboards that show what's actually happening.</p>
+                </div>
+            </div>
+
+            <div class="group bg-[#100e0e] border border-white/8 hover:border-yellow/30 rounded-xl p-6 transition-all duration-300 hover:-translate-y-0.5 flex items-start gap-5">
+                <div class="flex-shrink-0">
+                    <div class="w-10 h-10 bg-yellow/10 border border-yellow/20 rounded-lg flex items-center justify-center">
+                        <span class="text-yellow text-xs font-extrabold">08</span>
+                    </div>
+                </div>
+                <div>
+                    <h3 class="font-bold text-cream mb-1">Advanced Scenarios</h3>
+                    <p class="text-mist text-sm leading-relaxed">Tenant-to-tenant migrations, federation in complex orgs, and high-assurance environments.</p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+
+<!-- =====================================================
+     PRICING
+===================================================== -->
+<section class="relative bg-ink py-24 md:py-32 overflow-hidden" aria-labelledby="pricing-heading">
+    <div class="absolute inset-0 halftone pointer-events-none" aria-hidden="true"></div>
+    <div class="absolute top-0 right-0 w-1 h-full bg-gradient-to-b from-transparent via-yellow/20 to-transparent" aria-hidden="true"></div>
+
+    <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+        <div class="text-center mb-14 reveal">
+            <div class="inline-flex items-center gap-2 border border-yellow/30 rounded-sm px-3 py-1 mb-5">
+                <span class="text-yellow text-[10px] font-bold uppercase tracking-[0.2em]">Pricing</span>
+            </div>
+            <h2 id="pricing-heading" class="text-3xl sm:text-4xl font-extrabold text-cream mb-4">Choose your path.</h2>
+            <p class="text-mist text-lg max-w-xl mx-auto">Waitlist members get early access pricing before the public launch.</p>
+        </div>
+
+        <div class="grid md:grid-cols-2 gap-6 max-w-3xl mx-auto stagger">
+
+            <!-- Standard -->
+            <div class="bg-[#100e0e] border border-white/8 rounded-2xl overflow-hidden flex flex-col">
+                <div class="h-1 bg-gradient-to-r from-mist/30 via-mist/20 to-transparent"></div>
+                <div class="p-8 flex flex-col flex-grow">
+                    <h3 class="text-xl font-bold text-cream mb-2">Standard</h3>
+                    <p class="text-mist text-sm mb-6">Everything you need to understand Entra ID deeply.</p>
+                    <ul class="space-y-3 mb-8 flex-grow">
+                        <li class="flex items-center gap-3 text-sm text-mist">
+                            <svg class="flex-shrink-0" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#FACC15" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+                            All 8 modules + 50+ videos
+                        </li>
+                        <li class="flex items-center gap-3 text-sm text-mist">
+                            <svg class="flex-shrink-0" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#FACC15" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+                            20 hands-on labs
+                        </li>
+                        <li class="flex items-center gap-3 text-sm text-mist">
+                            <svg class="flex-shrink-0" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#FACC15" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+                            Downloadable reference guides
+                        </li>
+                        <li class="flex items-center gap-3 text-sm text-mist">
+                            <svg class="flex-shrink-0" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#FACC15" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+                            Community access
+                        </li>
+                    </ul>
+                    <div class="border-t border-white/8 pt-6">
+                        <p class="text-mist/50 text-sm mb-4">Pricing announced at launch</p>
+                        <a href="#waitlist"
+                           class="block text-center border border-yellow/30 hover:border-yellow hover:bg-yellow/5 text-yellow font-bold text-sm px-6 py-3 rounded-lg transition-all duration-200 cursor-pointer">
+                            Join Waitlist for Early Pricing
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pro (highlighted) -->
+            <div class="bg-yellow/5 border-2 border-yellow/40 hover:border-yellow rounded-2xl overflow-hidden flex flex-col relative transition-all duration-300">
+                <div class="absolute -top-3.5 left-1/2 -translate-x-1/2 bg-yellow text-ink text-[10px] font-extrabold uppercase tracking-[0.15em] px-4 py-1 rounded-sm">Most Popular</div>
+                <div class="h-1 bg-gradient-to-r from-yellow via-yellow-dim to-transparent"></div>
+                <div class="p-8 flex flex-col flex-grow">
+                    <h3 class="text-xl font-bold text-cream mb-2">Pro</h3>
+                    <p class="text-mist text-sm mb-6">The course plus direct access to Andrew.</p>
+                    <ul class="space-y-3 mb-8 flex-grow">
+                        <li class="flex items-center gap-3 text-sm text-mist">
+                            <svg class="flex-shrink-0" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#FACC15" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+                            Everything in Standard
+                        </li>
+                        <li class="flex items-center gap-3 text-sm text-mist">
+                            <svg class="flex-shrink-0" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#FACC15" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+                            One 30-min 1-on-1 Q&amp;A session with Andrew
+                        </li>
+                        <li class="flex items-center gap-3 text-sm text-mist">
+                            <svg class="flex-shrink-0" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#FACC15" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+                            Advanced lab scenarios
+                        </li>
+                        <li class="flex items-center gap-3 text-sm text-mist">
+                            <svg class="flex-shrink-0" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#FACC15" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+                            Priority community access
+                        </li>
+                    </ul>
+                    <div class="border-t border-yellow/15 pt-6">
+                        <p class="text-mist/50 text-sm mb-4">Pricing announced at launch</p>
+                        <a href="#waitlist"
+                           class="block text-center bg-yellow hover:bg-yellow-dim text-ink font-bold text-sm px-6 py-3 rounded-lg transition-all duration-200 cursor-pointer btn-yellow">
+                            Join Waitlist for Early Pricing
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+
+<!-- =====================================================
+     WAITLIST / EMAIL SIGNUP
+===================================================== -->
+<section id="waitlist" class="relative bg-[#080606] py-24 md:py-32 overflow-hidden" aria-labelledby="waitlist-heading">
+    <div class="absolute inset-0 grid-bg pointer-events-none" aria-hidden="true"></div>
+    <div class="absolute inset-0 halftone pointer-events-none" aria-hidden="true"></div>
+    <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-32 bg-yellow/8 rounded-full blur-3xl pointer-events-none" aria-hidden="true"></div>
+
+    <div class="relative max-w-2xl mx-auto px-4 sm:px-6 text-center">
+        <div class="reveal">
+            <div class="w-16 h-16 bg-yellow/10 border border-yellow/25 rounded-xl flex items-center justify-center mx-auto mb-8">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#FACC15" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            </div>
+
+            <div class="inline-flex items-center gap-2 border border-yellow/30 rounded-sm px-3 py-1 mb-5">
+                <span class="text-yellow text-[10px] font-bold uppercase tracking-[0.2em]">Join the Waitlist</span>
+            </div>
+            <h2 id="waitlist-heading" class="text-3xl sm:text-4xl font-extrabold text-cream mb-4">Get Early Access &amp; Launch Pricing</h2>
+            <p class="text-mist text-lg mb-10 max-w-lg mx-auto leading-relaxed">Be the first to know when Entra ID Mastery launches. Waitlist members get early access and exclusive pre-launch pricing.</p>
+
+            <div class="max-w-md mx-auto mb-4 kit-dark">
+                <script async data-uid="b4ddb25752" src="https://all-things-iam.kit.com/b4ddb25752/index.js"></script>
+            </div>
+            <p class="text-mist/40 text-xs">No spam, ever. Unsubscribe anytime.</p>
+        </div>
+    </div>
+</section>
+
+
+<!-- =====================================================
+     FOOTER
+===================================================== -->
+<footer class="bg-[#030202] border-t border-white/5 py-10" role="contentinfo">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex flex-col md:flex-row items-center justify-between gap-6">
+
+            <div class="flex flex-col items-center md:items-start gap-1.5">
+                <a href="/" class="cursor-pointer">
+                    <img src="logo-crop.png" alt="All Things IAM" class="h-9 w-auto" loading="lazy">
+                </a>
+                <p class="text-mist/40 text-xs">Practical IAM education for the real world.</p>
+            </div>
+
+            <nav class="flex flex-wrap justify-center gap-5" aria-label="Footer navigation">
+                <a href="/#about"        class="text-xs text-mist/50 hover:text-cream transition-colors duration-200 cursor-pointer">About</a>
+                <a href="/#courses"      class="text-xs text-mist/50 hover:text-cream transition-colors duration-200 cursor-pointer">Courses</a>
+                <a href="/#coaching"     class="text-xs text-mist/50 hover:text-cream transition-colors duration-200 cursor-pointer">Coaching</a>
+                <a href="/#testimonials" class="text-xs text-mist/50 hover:text-cream transition-colors duration-200 cursor-pointer">Reviews</a>
+                <a href="https://www.youtube.com/@allthingsiam" target="_blank" rel="noopener" class="text-xs text-mist/50 hover:text-cream transition-colors duration-200 cursor-pointer">YouTube</a>
+                <a href="https://www.linkedin.com/in/andrewchanthaphone/" target="_blank" rel="noopener" class="text-xs text-mist/50 hover:text-cream transition-colors duration-200 cursor-pointer">LinkedIn</a>
+            </nav>
+
+            <p class="text-mist/30 text-xs text-center md:text-right">
+                &copy; 2026 All Things IAM<br>Andrew Chanthaphone
+            </p>
+        </div>
+    </div>
+</footer>
+
+
+<!-- =====================================================
+     JS
+===================================================== -->
+<script>
+    // ── Navbar ─────────────────────────────────────────
+    const navbar = document.getElementById('navbar');
+    window.addEventListener('scroll', () => {
+        if (window.scrollY > 24) {
+            navbar.classList.add('bg-ink/95', 'backdrop-blur-md', 'border-b', 'border-white/5');
+        } else {
+            navbar.classList.remove('bg-ink/95', 'backdrop-blur-md', 'border-b', 'border-white/5');
+        }
+    }, { passive: true });
+
+    // ── Mobile menu ────────────────────────────────────
+    const mobBtn    = document.getElementById('mob-btn');
+    const mobMenu   = document.getElementById('mob-menu');
+    const iconMenu  = document.getElementById('icon-menu');
+    const iconClose = document.getElementById('icon-close');
+    let menuOpen = false;
+    mobBtn.addEventListener('click', () => {
+        menuOpen = !menuOpen;
+        mobMenu.classList.toggle('hidden', !menuOpen);
+        mobMenu.classList.toggle('flex',    menuOpen);
+        iconMenu.classList.toggle('hidden',  menuOpen);
+        iconClose.classList.toggle('hidden', !menuOpen);
+        mobBtn.setAttribute('aria-expanded', String(menuOpen));
+    });
+    mobMenu.querySelectorAll('a').forEach(a => {
+        a.addEventListener('click', () => {
+            menuOpen = false;
+            mobMenu.classList.add('hidden');
+            mobMenu.classList.remove('flex');
+            iconMenu.classList.remove('hidden');
+            iconClose.classList.add('hidden');
+            mobBtn.setAttribute('aria-expanded', 'false');
+        });
+    });
+
+    // ── Scroll reveal ──────────────────────────────────
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (!reduced) {
+        const obs = new IntersectionObserver((entries) => {
+            entries.forEach(e => {
+                if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); }
+            });
+        }, { threshold: 0.08, rootMargin: '0px 0px -48px 0px' });
+        document.querySelectorAll('.reveal, .stagger').forEach(el => obs.observe(el));
+    } else {
+        document.querySelectorAll('.reveal, .stagger').forEach(el => {
+            el.style.opacity = '1'; el.style.transform = 'none';
+        });
+    }
+
+    // ── Smooth scroll ──────────────────────────────────
+    document.querySelectorAll('a[href^="#"]').forEach(a => {
+        a.addEventListener('click', function(e) {
+            const target = document.querySelector(this.getAttribute('href'));
+            if (!target) return;
+            e.preventDefault();
+            const top = target.getBoundingClientRect().top + window.scrollY - navbar.offsetHeight - 16;
+            window.scrollTo({ top, behavior: reduced ? 'instant' : 'smooth' });
+        });
+    });
+</script>
+
+</body>
+</html>
