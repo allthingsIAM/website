@@ -91,13 +91,6 @@
         .btn-red:hover { box-shadow: 0 0 24px rgba(254,37,0,0.35); }
         .btn-yellow:hover { box-shadow: 0 0 24px rgba(250,204,21,0.3); }
 
-        /* Kit form dark-mode overrides */
-        .kit-dark .formkit-form { background: transparent !important; border: none !important; padding: 0 !important; }
-        .kit-dark .formkit-field input { background: rgba(255,255,255,0.04) !important; border: 1px solid rgba(255,255,255,0.1) !important; color: #FBF9F7 !important; border-radius: 8px !important; }
-        .kit-dark .formkit-field input:focus { border-color: #FACC15 !important; outline: none !important; }
-        .kit-dark .formkit-submit { background: #FACC15 !important; color: #050303 !important; font-weight: 700 !important; border-radius: 8px !important; }
-        .kit-dark .formkit-submit:hover { background: #EAB308 !important; }
-        .kit-dark .formkit-guarantee, .kit-dark .formkit-powered-by { display: none !important; }
 
         /* Geometric corner decoration */
         .corner-bracket::before,
@@ -817,9 +810,34 @@
             <h2 id="signup-heading" class="text-3xl sm:text-4xl font-extrabold text-cream mb-4">Get Your Free IAM Roadmap</h2>
             <p class="text-mist text-lg mb-10 max-w-lg mx-auto leading-relaxed">Not sure where to start in IAM? Get 9 essential steps from a 14-year practitioner straight to your inbox — in under a minute.</p>
 
-            <div class="max-w-md mx-auto mb-4 kit-dark">
-                <script async data-uid="b4ddb25752" src="https://all-things-iam.kit.com/b4ddb25752/index.js"></script>
-            </div>
+            <form
+                id="signup-form"
+                class="flex flex-col sm:flex-row gap-3 max-w-md mx-auto mb-4"
+                aria-label="Email signup form"
+                onsubmit="handleKitSignup(event,'signup-form','signup-msg','b4ddb25752')"
+                novalidate
+            >
+                <label for="signup-email" class="sr-only">Email address</label>
+                <input
+                    id="signup-email"
+                    type="email"
+                    name="email"
+                    placeholder="Enter your email address"
+                    required
+                    autocomplete="email"
+                    class="flex-grow bg-white/4 border border-white/10 hover:border-yellow/30 focus:border-yellow focus:ring-2 focus:ring-yellow/15 text-cream placeholder-mist/40 rounded-lg px-4 py-3.5 text-sm outline-none transition-all duration-200 min-h-[48px]"
+                    aria-required="true"
+                >
+                <button
+                    type="submit"
+                    id="signup-btn"
+                    data-label="Get Free Roadmap"
+                    class="flex-shrink-0 bg-yellow hover:bg-yellow-dim text-ink font-bold text-sm px-6 py-3.5 rounded-lg transition-all duration-200 cursor-pointer btn-yellow min-h-[48px] disabled:opacity-50"
+                >
+                    Get Free Roadmap
+                </button>
+            </form>
+            <p id="signup-msg" class="text-sm mb-3 min-h-[1.25rem]" role="status" aria-live="polite"></p>
             <p class="text-mist/40 text-xs">No spam, ever. Unsubscribe anytime.</p>
         </div>
     </div>
@@ -924,6 +942,47 @@
             window.scrollTo({ top, behavior: reduced ? 'instant' : 'smooth' });
         });
     });
+
+    // ── Kit signup ────────────────────────────────────────────────
+    async function handleKitSignup(e, formId, msgId, kitFormId) {
+        e.preventDefault();
+        const form  = document.getElementById(formId);
+        const msg   = document.getElementById(msgId);
+        const btn   = form.querySelector('button[type="submit"]');
+        const email = form.querySelector('input[type="email"]').value.trim();
+
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+            msg.textContent = 'Please enter a valid email address.';
+            msg.style.color = '#FE2500';
+            return;
+        }
+
+        btn.disabled = true;
+        btn.textContent = 'Subscribing…';
+        msg.textContent = '';
+
+        try {
+            const res = await fetch(`https://api.convertkit.com/v3/forms/${kitFormId}/subscribe`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ api_key: '6nEK5WJhrZru16-3TuBsDA', email })
+            });
+            const data = await res.json();
+            if (data.subscription) {
+                msg.textContent = "You're in! Check your inbox for the free IAM Roadmap.";
+                msg.style.color = '#4ade80';
+                form.reset();
+            } else {
+                throw new Error('Kit error');
+            }
+        } catch {
+            msg.textContent = 'Something went wrong. Try again or email andrew@allthingsidentity.com';
+            msg.style.color = '#FE2500';
+        } finally {
+            btn.disabled = false;
+            btn.textContent = btn.dataset.label || 'Get Free Roadmap';
+        }
+    }
 
 </script>
 

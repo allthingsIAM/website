@@ -84,13 +84,6 @@
         .btn-yellow:hover { box-shadow: 0 0 24px rgba(250,204,21,0.3); }
         .btn-red:hover    { box-shadow: 0 0 24px rgba(254,37,0,0.35); }
 
-        /* Kit form dark overrides */
-        .kit-dark .formkit-form { background: transparent !important; border: none !important; padding: 0 !important; }
-        .kit-dark .formkit-field input { background: rgba(255,255,255,0.04) !important; border: 1px solid rgba(255,255,255,0.1) !important; color: #FBF9F7 !important; border-radius: 8px !important; }
-        .kit-dark .formkit-field input:focus { border-color: #FACC15 !important; outline: none !important; }
-        .kit-dark .formkit-submit { background: #FACC15 !important; color: #050303 !important; font-weight: 700 !important; border-radius: 8px !important; }
-        .kit-dark .formkit-submit:hover { background: #EAB308 !important; }
-        .kit-dark .formkit-guarantee, .kit-dark .formkit-powered-by { display: none !important; }
     </style>
 </head>
 
@@ -538,9 +531,33 @@
             <h2 id="waitlist-heading" class="text-3xl sm:text-4xl font-extrabold text-cream mb-4">Get Early Access &amp; Launch Pricing</h2>
             <p class="text-mist text-lg mb-10 max-w-lg mx-auto leading-relaxed">Be the first to know when Entra ID Mastery launches. Waitlist members get early access and exclusive pre-launch pricing.</p>
 
-            <div class="max-w-md mx-auto mb-4 kit-dark">
-                <script async data-uid="b4ddb25752" src="https://all-things-iam.kit.com/b4ddb25752/index.js"></script>
-            </div>
+            <form
+                id="waitlist-form"
+                class="flex flex-col sm:flex-row gap-3 max-w-md mx-auto mb-4"
+                aria-label="Waitlist signup form"
+                onsubmit="handleKitSignup(event,'waitlist-form','waitlist-msg','87b64b8d9f')"
+                novalidate
+            >
+                <label for="waitlist-email" class="sr-only">Email address</label>
+                <input
+                    id="waitlist-email"
+                    type="email"
+                    name="email"
+                    placeholder="Enter your email address"
+                    required
+                    autocomplete="email"
+                    class="flex-grow bg-white/4 border border-white/10 hover:border-yellow/30 focus:border-yellow focus:ring-2 focus:ring-yellow/15 text-cream placeholder-mist/40 rounded-lg px-4 py-3.5 text-sm outline-none transition-all duration-200 min-h-[48px]"
+                    aria-required="true"
+                >
+                <button
+                    type="submit"
+                    data-label="Join Waitlist"
+                    class="flex-shrink-0 bg-yellow hover:bg-yellow-dim text-ink font-bold text-sm px-6 py-3.5 rounded-lg transition-all duration-200 cursor-pointer min-h-[48px] disabled:opacity-50"
+                >
+                    Join Waitlist
+                </button>
+            </form>
+            <p id="waitlist-msg" class="text-sm mb-3 min-h-[1.25rem]" role="status" aria-live="polite"></p>
             <p class="text-mist/40 text-xs">No spam, ever. Unsubscribe anytime.</p>
         </div>
     </div>
@@ -642,6 +659,47 @@
             window.scrollTo({ top, behavior: reduced ? 'instant' : 'smooth' });
         });
     });
+
+    // ── Kit signup ─────────────────────────────────────
+    async function handleKitSignup(e, formId, msgId, kitFormId) {
+        e.preventDefault();
+        const form  = document.getElementById(formId);
+        const msg   = document.getElementById(msgId);
+        const btn   = form.querySelector('button[type="submit"]');
+        const email = form.querySelector('input[type="email"]').value.trim();
+
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+            msg.textContent = 'Please enter a valid email address.';
+            msg.style.color = '#FE2500';
+            return;
+        }
+
+        btn.disabled = true;
+        btn.textContent = 'Subscribing…';
+        msg.textContent = '';
+
+        try {
+            const res = await fetch(`https://api.convertkit.com/v3/forms/${kitFormId}/subscribe`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ api_key: '6nEK5WJhrZru16-3TuBsDA', email })
+            });
+            const data = await res.json();
+            if (data.subscription) {
+                msg.textContent = "You're on the waitlist! We'll email you at launch.";
+                msg.style.color = '#4ade80';
+                form.reset();
+            } else {
+                throw new Error('Kit error');
+            }
+        } catch {
+            msg.textContent = 'Something went wrong. Try again or email andrew@allthingsidentity.com';
+            msg.style.color = '#FE2500';
+        } finally {
+            btn.disabled = false;
+            btn.textContent = btn.dataset.label || 'Join Waitlist';
+        }
+    }
 </script>
 
 </body>
